@@ -5,20 +5,19 @@ from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
 
 class Entity(object):
-    def __init__(self,config,painter,pose,fps,frame_size):
+    def __init__(self,config,painter,pose,fps):
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.config = config
         self.painter = painter
         self.pose = pose
         self.fps = float(fps)
-        self.frame_size = frame_size
         self.default_color = self.paint_utils.random_color()
         self.physics = None
         self.physics_lock = False
 
     def add_physics(self,mass,collision_bodies=None):
-        self.physics = Physics2D(self.config,mass,self.frame_size,collision_bodies=collision_bodies)
+        self.physics = Physics2D(self.config,mass,collision_bodies=collision_bodies)
         self.physics.pose = self.pose.copy()
 
     def update_physics(self):
@@ -38,6 +37,9 @@ class Entity(object):
             self.physics.pose = pose
     
     def paint(self):
+        if self.config['color'] == "None":
+            return
+        
         if self.config['type'] == 'circle':
             pen,brush = self.paint_utils.ball(self.default_color)
             self.painter.setPen(pen)

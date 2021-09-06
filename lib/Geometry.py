@@ -39,6 +39,23 @@ def point_is_collision(point,body):
         else:
             return False
 
+def circle_collision_check(pose,radius,body):
+    if body.config['type']=='rect':
+        edges = []
+        edges.append([np.array([body.pose[0],body.pose[1]]),np.array([body.pose[0]+body.config['width'],body.pose[1]])])
+        edges.append([np.array([body.pose[0]+body.config['width'],body.pose[1]]),np.array([body.pose[0]+body.config['width'],body.pose[1]+body.config['height']])])
+        edges.append([np.array([body.pose[0]+body.config['width'],body.pose[1]+body.config['height']]),np.array([body.pose[0],body.pose[1]+body.config['height']])])
+        edges.append([np.array([body.pose[0],body.pose[1]+body.config['height']]),np.array([body.pose[0],body.pose[1]])])
+        for edge in edges:
+            min_dist,C = min_dist_point_to_line(pose,edge[0],edge[1])
+            if  min_dist <= radius:
+                if edge[0][0] == edge[1][0]:
+                    reflect = np.array([-1,1])
+                else:
+                    reflect = np.array([1,-1])
+                return True,reflect
+    return False,np.array([1,1])
+
 def rotate_2d(vertices,angle):
     rot_mat = np.array([[cos(angle),-sin(angle)],[sin(angle),cos(angle)]])
     r,c = vertices.shape

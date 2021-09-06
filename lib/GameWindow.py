@@ -65,22 +65,26 @@ class GameWindow(QLabel):
                 self.ball_config_idx = idx
             elif entity_object['name'] == 'ground':
                 self.ground_config_idx = idx
+            elif entity_object['name'] == 'boundary':
+                self.boundary_config_idx = idx
 
     def start_simulation(self):
         self.logger.insert_blank_lines(2)
         self.logger.log('Game starting...',color='g')
 
-        self.entities.append(Entity(self.entity_configs[self.ground_config_idx],self.painter,np.array([[0],[0]]),self.fps,self.frame_size))
+        self.entities.append(Entity(self.entity_configs[self.ground_config_idx],self.painter,np.array([0,0]),self.fps))
         self.entities[-1].teleport(np.array([400,400-self.entities[-1].config['height']]))
         self.ground_entity = self.entities[-1]
+        self.entities.append(Entity(self.entity_configs[self.boundary_config_idx],self.painter,np.array([0,0]),self.fps))
+        self.boundary_entity = self.entities[-1]
 
         self.game_timer.start(1000/self.fps)
         self.health_logger_timer.start(2000)
         self.average_fps_timer.start(1000/5)
 
     def spawn_ball(self,pose,velocity):
-        self.entities.append(Entity(self.entity_configs[self.ball_config_idx],self.painter,pose,self.fps,self.frame_size))
-        self.entities[-1].add_physics(1.0,collision_bodies=[self.ground_entity])
+        self.entities.append(Entity(self.entity_configs[self.ball_config_idx],self.painter,pose,self.fps))
+        self.entities[-1].add_physics(1.0,collision_bodies=[self.ground_entity,self.boundary_entity])
         self.entities[-1].physics.velocity = velocity
 
     def mousePressEvent(self, e):
