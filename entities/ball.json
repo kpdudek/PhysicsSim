@@ -1,0 +1,8 @@
+{
+    "name":"ball",
+    "type":"circle",
+    "color":"random",
+
+    "radius":10,
+    "pose":[0,0]
+}

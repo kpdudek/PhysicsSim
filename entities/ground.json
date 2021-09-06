@@ -1,0 +1,10 @@
+{
+    "name":"ground",
+    "type":"rect",
+    "color":"brown",
+
+    "width":500,
+    "height":30,
+    "vertices":[[0,0],[500,0],[500,30],[0,30]],
+    "pose":[0,0]
+}
