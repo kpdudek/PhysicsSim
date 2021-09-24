@@ -13,7 +13,7 @@ import lib.Geometry as geom
 import numpy as np
 import os, json, time
 
-class GameWindow(QLabel):
+class GameManager(QLabel):
     shutdown_signal = QtCore.pyqtSignal()
 
     def __init__(self,keys_pressed,debug_mode):
@@ -23,7 +23,7 @@ class GameWindow(QLabel):
         self.paint_utils = PaintUtils()
         self.file_paths = FilePaths()
 
-        self.frame_size = np.array([1400,800])
+        self.frame_size = np.array([1600,900])
         self.canvas_pixmap = QtGui.QPixmap(self.frame_size[0],self.frame_size[1])
         self.setPixmap(self.canvas_pixmap)
         self.painter = QtGui.QPainter(self.pixmap())
@@ -32,8 +32,10 @@ class GameWindow(QLabel):
         self.entities = []
         self.item_selected = None
         self.prev_mouse_pose = None
+        self.control_force = np.array([0,0])
+        self.control_torque = 0
 
-        self.fps = 120
+        self.fps = 100
         self.max_fps = 0.0
         self.prev_fps = 0.0
         self.average_fps = 0.0
@@ -73,13 +75,16 @@ class GameWindow(QLabel):
         self.logger.log('Game starting...',color='g')
 
         self.entities.append(Entity(self.entity_configs[self.ground_config_idx],self.painter,np.array([0,0]),self.fps))
-        self.entities[-1].teleport(np.array([400,400-self.entities[-1].config['height']]))
+        self.entities[-1].teleport(np.array([400,200]))
         self.ground_entity = self.entities[-1]
+
         self.entities.append(Entity(self.entity_configs[self.boundary_config_idx],self.painter,np.array([0,0]),self.fps))
         self.boundary_entity = self.entities[-1]
+        self.boundary_entity.config['width'] = self.frame_size[0]
+        self.boundary_entity.config['height'] = self.frame_size[1]
 
         self.game_timer.start(1000/self.fps)
-        self.health_logger_timer.start(2000)
+        self.health_logger_timer.start(1000)
         self.average_fps_timer.start(1000/5)
 
     def spawn_ball(self,pose,velocity):
@@ -131,8 +136,15 @@ class GameWindow(QLabel):
             self.launch_point = None
         
     def process_keys(self):
+        self.control_force = np.array([0,0])
+        self.control_torque = 0.0
         for key in self.keys_pressed:
-            pass
+            if key == Qt.Key_D:
+                # self.control_force[0] = 1
+                self.control_torque = 1
+            if key == Qt.Key_A:
+                # self.control_force[0] = 1
+                self.control_torque = -1
 
     def toggle_pause(self):
         if self.paused:
@@ -144,7 +156,7 @@ class GameWindow(QLabel):
         pen,brush = self.paint_utils.background()
         self.painter.setPen(pen)
         self.painter.setBrush(brush)
-        self.painter.drawRect(0,0,1400,800)
+        self.painter.drawRect(0,0,self.frame_size[0],self.frame_size[1])
 
         pen,brush = self.paint_utils.set_color('white')
         self.painter.setPen(pen)
@@ -165,6 +177,7 @@ class GameWindow(QLabel):
     def health_logger(self):
         self.logger.log(f'Average FPS: {self.average_fps}')
         self.logger.log(f'Number of Entities: {len(self.entities)}')
+        self.logger.log(f'Keys pressed: {self.keys_pressed}')
     
     def average_fps_calculator(self):
         self.average_fps = (self.max_fps + self.prev_fps) / 2.0
@@ -177,7 +190,7 @@ class GameWindow(QLabel):
         
         for entity in self.entities:
             if not self.paused:
-                entity.update_physics()
+                entity.update_physics(self.control_force*100.0,self.control_torque)
             entity.paint()
 
         self.paint_launch_controls()

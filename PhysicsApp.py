@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
-from lib.GameWindow import GameWindow
+from lib.GameManager import GameManager
 from lib.Logger import Logger
 
 import sys
@@ -28,7 +28,7 @@ class PhysicsApp(QMainWindow):
         self.keys_pressed = []
         self.debug_mode = False
 
-        self.game_window = GameWindow(self.keys_pressed,self.debug_mode)
+        self.game_window = GameManager(self.keys_pressed,self.debug_mode)
         self.game_window.shutdown_signal.connect(self.shutdown)
         self.setCentralWidget(self.game_window)
 

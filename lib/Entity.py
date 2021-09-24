@@ -20,10 +20,10 @@ class Entity(object):
         self.physics = Physics2D(self.config,mass,collision_bodies=collision_bodies)
         self.physics.pose = self.pose.copy()
 
-    def update_physics(self):
+    def update_physics(self,forces,torques):
         if self.physics and not self.physics_lock:
             time = 1.0/self.fps
-            pose = self.physics.accelerate(self.physics.gravity_force,time,collisions=True)
+            pose = self.physics.accelerate(self.physics.gravity_force,torques,time,collisions=True)
             self.pose = pose
     
     def translate(self,vec):
@@ -51,4 +51,8 @@ class Entity(object):
             self.painter.setPen(pen)
             self.painter.setBrush(brush)
             self.painter.drawRect(int(self.pose[0]),int(self.pose[1]),self.config['width'],self.config['height'])
+
+class DynamicEntity(Entity):
+    def __init__(self,keys_pressed,debug_mode):
+        super().__init__(keys_pressed,debug_mode)
  
