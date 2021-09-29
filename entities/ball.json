@@ -2,6 +2,7 @@
     "name":"ball",
     "type":"circle",
     "color":"random",
+    "fill":0,
 
     "radius":10,
     "pose":[0,0]

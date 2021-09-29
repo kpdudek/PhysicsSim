@@ -2,6 +2,7 @@
     "name":"ground",
     "type":"rect",
     "color":"brown",
+    "fill":1,
 
     "width":800,
     "height":30,

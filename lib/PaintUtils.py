@@ -32,17 +32,6 @@ class PaintUtils(object):
             key = list(self.colors.keys())[index]
         return self.colors[key]
 
-    def background(self):
-        pen = QtGui.QPen()
-        pen.setWidth(1)
-        pen.setColor(QtGui.QColor(self.colors['black']))
-
-        brush = QtGui.QBrush()
-        brush.setColor(QtGui.QColor(self.colors['black']))
-        brush.setStyle(Qt.SolidPattern)
-
-        return pen,brush
-
     def ball(self,color):
         pen = QtGui.QPen()
         pen.setWidth(1)
@@ -65,13 +54,16 @@ class PaintUtils(object):
 
         return pen,brush
 
-    def set_color(self,color):
+    def set_color(self,color,fill):
         pen = QtGui.QPen()
         pen.setWidth(1)
         pen.setColor(QtGui.QColor(self.colors[color]))
 
         brush = QtGui.QBrush()
         brush.setColor(QtGui.QColor(self.colors[color]))
-        brush.setStyle(Qt.SolidPattern)
+        if fill:
+            brush.setStyle(Qt.SolidPattern)
+        else:
+            brush.setStyle(Qt.NoBrush)
 
         return pen,brush

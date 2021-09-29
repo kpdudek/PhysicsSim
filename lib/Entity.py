@@ -16,6 +16,7 @@ class Entity(object):
         self.physics = None
         self.physics_lock = False
 
+    # TODO: move physics to the dynamic obstacle child class
     def add_physics(self,mass,collision_bodies=None):
         self.physics = Physics2D(self.config,mass,collision_bodies=collision_bodies)
         self.physics.pose = self.pose.copy()
@@ -36,21 +37,21 @@ class Entity(object):
         if self.physics:
             self.physics.pose = pose
     
-    def paint(self):
-        if self.config['color'] == "None":
-            return
+    # def paint(self):
+    #     if self.config['color'] == "None":
+    #         return
         
-        if self.config['type'] == 'circle':
-            pen,brush = self.paint_utils.ball(self.default_color)
-            self.painter.setPen(pen)
-            self.painter.setBrush(brush)
-            self.painter.drawEllipse(int(self.pose[0])-10,int(self.pose[1])-10,20,20)
+    #     if self.config['type'] == 'circle':
+    #         pen,brush = self.paint_utils.ball(self.default_color)
+    #         self.painter.setPen(pen)
+    #         self.painter.setBrush(brush)
+    #         self.painter.drawEllipse(int(self.pose[0])-10,int(self.pose[1])-10,20,20)
         
-        elif self.config['type'] == 'rect':
-            pen,brush = self.paint_utils.ground()
-            self.painter.setPen(pen)
-            self.painter.setBrush(brush)
-            self.painter.drawRect(int(self.pose[0]),int(self.pose[1]),self.config['width'],self.config['height'])
+    #     elif self.config['type'] == 'rect':
+    #         pen,brush = self.paint_utils.ground()
+    #         self.painter.setPen(pen)
+    #         self.painter.setBrush(brush)
+    #         self.painter.drawRect(int(self.pose[0]),int(self.pose[1]),self.config['width'],self.config['height'])
 
 class DynamicEntity(Entity):
     def __init__(self,keys_pressed,debug_mode):
