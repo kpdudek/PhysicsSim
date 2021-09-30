@@ -10,16 +10,22 @@ class Camera(object):
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.painter = painter
-        self.pose = pose
         self.scene = scene
-
-        # self.translate(np.array([100,100]))
+        self.pose = pose
+        self.zoom_level = 1.0
 
     def translate(self,vec):
         self.pose = self.pose + vec
 
     def zoom(self,multiplier):
-        pass
+        self.zoom_level = multiplier
+
+    def transform(self,point,frame='world'):
+        '''
+        Transforms a point in a given frame to the camera frame
+        '''
+        coord = self.pose - point
+        return coord
 
     def update(self):
         for entity in self.scene.entities:
@@ -27,13 +33,12 @@ class Camera(object):
                 pass
             
             elif entity.config['type'] == 'circle':
-                pen,brush = self.paint_utils.ball(entity.default_color)
+                pen,brush = self.paint_utils.set_color(entity.default_color,1)
                 self.painter.setPen(pen)
                 self.painter.setBrush(brush)
                 self.painter.drawEllipse(int(entity.pose[0])-10+self.pose[0],int(entity.pose[1])-10+self.pose[1],20,20)
             
             elif entity.config['type'] == 'rect':
-                # pen,brush = self.paint_utils.ground()
                 pen,brush = self.paint_utils.set_color(entity.config['color'],entity.config['fill'])
                 self.painter.setPen(pen)
                 self.painter.setBrush(brush)

@@ -67,8 +67,6 @@ class GameManager(QLabel):
 
         self.scene.entities.append(Entity(self.scene.entity_configs[self.scene.boundary_config_idx],self.painter,np.array([0,0]),self.fps))
         self.boundary_entity = self.scene.entities[-1]
-        self.boundary_entity.config['width'] = self.frame_size[0]
-        self.boundary_entity.config['height'] = self.frame_size[1]
 
         self.game_timer.start(1000/self.fps)
         self.health_logger_timer.start(1000)
@@ -129,9 +127,17 @@ class GameManager(QLabel):
             if key == Qt.Key_D:
                 # self.control_force[0] = 1
                 self.control_torque = 1
-            if key == Qt.Key_A:
+            elif key == Qt.Key_A:
                 # self.control_force[0] = 1
                 self.control_torque = -1
+            elif key == Qt.Key_Right:
+                self.camera.translate(np.array([5,0]))
+            elif key == Qt.Key_Left:
+                self.camera.translate(np.array([-5,0]))
+            elif key == Qt.Key_Up:
+                self.camera.translate(np.array([0,-5]))
+            elif key == Qt.Key_Down:
+                self.camera.translate(np.array([0,5]))
 
     def toggle_pause(self):
         if self.paused:
