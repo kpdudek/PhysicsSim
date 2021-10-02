@@ -24,7 +24,7 @@ class Camera(object):
         '''
         Transforms a point in a given frame to the camera frame
         '''
-        coord = self.pose - point
+        coord = point - self.pose
         return coord
 
     def update(self):

@@ -21,7 +21,7 @@ class PaintUtils(object):
             "red":"#DF0101",
             "maroon":"#B40431"
         }
-        self.reserved_colors = ['black','brown']
+        self.reserved_colors = ['black','brown','light_gray']
 
     def random_color(self):
         '''

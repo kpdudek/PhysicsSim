@@ -82,7 +82,7 @@ class GameManager(QLabel):
         point = np.array([e.x(),e.y()])
         if e.button() == 1:
             for entity in self.scene.entities:
-                if geom.point_is_collision(point,entity):
+                if geom.point_is_collision(self.camera.transform(point.copy()),entity):
                     self.logger.log(f'Selected entity: {entity}')
                     self.item_selected = entity
                     self.prev_mouse_pose = point
@@ -92,7 +92,7 @@ class GameManager(QLabel):
             self.launch_point = point
         elif e.button() == 2:
             for entity in self.scene.entities:
-                if geom.point_is_collision(point,entity):
+                if geom.point_is_collision(self.camera.transform(point.copy()),entity):
                     self.logger.log(f'Removing entity: {entity}')
                     self.scene.entities.remove(entity)
                     return
@@ -116,7 +116,8 @@ class GameManager(QLabel):
         if e.button() == 1:
             self.launch_point = np.array([e.x(),e.y()])
             launch_vel = (self.launch_origin-self.launch_point)*10.0
-            self.spawn_ball(self.launch_origin,launch_vel)
+            launch_point = self.camera.transform(self.launch_origin)
+            self.spawn_ball(launch_point,launch_vel)
             self.launch_origin = None
             self.launch_point = None
         
