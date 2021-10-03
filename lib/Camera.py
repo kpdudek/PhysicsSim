@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
+from PyQt5 import QtCore
+
 from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
 
 import numpy as np
 
 class Camera(object):
-    def __init__(self,painter,pose,size,scene):
+    def __init__(self,frame_size,painter,pose,scene):
         self.logger = Logger()
         self.paint_utils = PaintUtils()
+        self.frame_size = frame_size
         self.painter = painter
         self.scene = scene
         self.pose = pose
@@ -26,6 +29,28 @@ class Camera(object):
         '''
         coord = point - self.pose
         return coord
+
+    def clear_display(self,fps):
+        pen,brush = self.paint_utils.set_color('light_gray',1)
+        self.painter.setPen(pen)
+        self.painter.setBrush(brush)
+        self.painter.drawRect(0,0,self.frame_size[0],self.frame_size[1])
+
+        pen,brush = self.paint_utils.set_color('black',1)
+        self.painter.setPen(pen)
+        self.painter.setBrush(brush)
+        self.painter.drawText(3,13,200,75,QtCore.Qt.TextWordWrap,str(int(fps)))
+    
+    def paint_launch_controls(self):
+        if type(self.scene.launch_origin)==np.ndarray:
+            pen,brush = self.paint_utils.set_color('white',1)
+            self.painter.setPen(pen)
+            self.painter.setBrush(brush)
+            self.painter.drawEllipse(self.scene.launch_origin[0]-2,self.scene.launch_origin[1]-2,5,5)
+
+            slope = np.array([-1*(self.scene.launch_point[0]-self.scene.launch_origin[0]),-1*(self.scene.launch_point[1]-self.scene.launch_origin[1])])
+            val = self.scene.launch_origin + slope
+            self.painter.drawLine(self.scene.launch_origin[0],self.scene.launch_origin[1],val[0],val[1])
 
     def update(self):
         for entity in self.scene.entities:

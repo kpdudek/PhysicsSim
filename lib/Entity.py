@@ -5,11 +5,10 @@ from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
 
 class Entity(object):
-    def __init__(self,config,painter,pose,fps):
+    def __init__(self,config,pose,fps):
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.config = config
-        self.painter = painter
         self.pose = pose
         self.fps = float(fps)
         self.default_color = self.paint_utils.random_color()
@@ -36,22 +35,6 @@ class Entity(object):
         self.pose = pose
         if self.physics:
             self.physics.pose = pose
-    
-    # def paint(self):
-    #     if self.config['color'] == "None":
-    #         return
-        
-    #     if self.config['type'] == 'circle':
-    #         pen,brush = self.paint_utils.ball(self.default_color)
-    #         self.painter.setPen(pen)
-    #         self.painter.setBrush(brush)
-    #         self.painter.drawEllipse(int(self.pose[0])-10,int(self.pose[1])-10,20,20)
-        
-    #     elif self.config['type'] == 'rect':
-    #         pen,brush = self.paint_utils.ground()
-    #         self.painter.setPen(pen)
-    #         self.painter.setBrush(brush)
-    #         self.painter.drawRect(int(self.pose[0]),int(self.pose[1]),self.config['width'],self.config['height'])
 
 class DynamicEntity(Entity):
     def __init__(self,keys_pressed,debug_mode):
