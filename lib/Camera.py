@@ -47,7 +47,6 @@ class Camera(object):
             self.painter.setPen(pen)
             self.painter.setBrush(brush)
             self.painter.drawEllipse(self.scene.launch_origin[0]-2,self.scene.launch_origin[1]-2,5,5)
-
             slope = np.array([-1*(self.scene.launch_point[0]-self.scene.launch_origin[0]),-1*(self.scene.launch_point[1]-self.scene.launch_origin[1])])
             val = self.scene.launch_origin + slope
             self.painter.drawLine(self.scene.launch_origin[0],self.scene.launch_origin[1],val[0],val[1])

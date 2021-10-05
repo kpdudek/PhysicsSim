@@ -31,6 +31,8 @@ class GameManager(QLabel):
         self.prev_fps = 0.0
         self.average_fps = 0.0
 
+        self.resize_flag = False
+        self.resize_size = []
         self.scene = Scene(self.fps)
         self.resize_canvas(1600,900)
         self.camera = Camera(self.frame_size,self.painter,np.array([0,0]),self.scene)
@@ -52,14 +54,25 @@ class GameManager(QLabel):
         self.start_simulation()
 
     def resize_canvas(self,width,height):
+        try:
+            self.painter.end()
+        except:
+            pass
         self.frame_size = np.array([width,height])
         self.canvas_pixmap = QtGui.QPixmap(self.frame_size[0],self.frame_size[1])
         self.setPixmap(self.canvas_pixmap)
         self.painter = QtGui.QPainter(self.pixmap())
+        try:
+            self.camera.painter = self.painter
+            self.camera.frame_size = self.frame_size
+        except:
+            pass
+        self.resize_flag = False
 
     def resizeEvent(self, e):
         self.logger.log(f"Window resized to: [{e.size().width()},{e.size().height()}]")
-        # self.resize_canvas(e.size().width(),e.size().height())
+        self.resize_flag = True
+        self.resize_size = [e.size().width(),e.size().height()]
 
     def start_simulation(self):
         self.logger.insert_blank_lines(2)
@@ -160,3 +173,10 @@ class GameManager(QLabel):
         self.repaint()
         toc = time.time()
         self.max_fps = 1.0/(toc-tic)
+
+        if self.resize_flag:
+            # self.painter.end()
+            self.resize_canvas(self.resize_size[0],self.resize_size[1])
+            # self.camera.painter = self.painter
+            # self.camera.frame_size = self.frame_size
+            # self.resize_flag = False
