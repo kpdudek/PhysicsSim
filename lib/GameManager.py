@@ -6,7 +6,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel
 
 from lib.Logger import Logger, FilePaths
-from lib.Entity import Entity
 from lib.PaintUtils import PaintUtils
 from lib.Camera import Camera
 from lib.Scene import Scene
@@ -34,7 +33,7 @@ class GameManager(QLabel):
         self.resize_flag = False
         self.resize_size = []
         self.scene = Scene(self.fps)
-        self.resize_canvas(1600,900)
+        self.resize_canvas(1400,800)
         self.camera = Camera(self.frame_size,self.painter,np.array([0,0]),self.scene)
 
         self.prev_mouse_pose = None
@@ -46,6 +45,7 @@ class GameManager(QLabel):
 
         self.health_logger_timer = QtCore.QTimer()
         self.health_logger_timer.timeout.connect(self.health_logger)
+
         self.average_fps_timer = QtCore.QTimer()
         self.average_fps_timer.timeout.connect(self.average_fps_calculator)
 
@@ -79,7 +79,6 @@ class GameManager(QLabel):
         self.logger.log('Game starting...',color='g')
         self.scene.init_scene()
         self.game_timer.start(1000/self.fps)
-        self.health_logger_timer.start(1000)
         self.average_fps_timer.start(1000/5)
 
     def mousePressEvent(self, e):
@@ -108,7 +107,7 @@ class GameManager(QLabel):
             translate = curr_mouse_pose - self.prev_mouse_pose
             self.scene.item_selected.translate(translate)
             self.prev_mouse_pose = curr_mouse_pose
-            self.scene.item_selected.physics.velocity = np.array([0.0,0.0])
+            self.scene.item_selected.physics.velocity = np.array(translate*150)
             return
         self.scene.launch_point = np.array([e.x(),e.y()])
 
@@ -175,8 +174,4 @@ class GameManager(QLabel):
         self.max_fps = 1.0/(toc-tic)
 
         if self.resize_flag:
-            # self.painter.end()
             self.resize_canvas(self.resize_size[0],self.resize_size[1])
-            # self.camera.painter = self.painter
-            # self.camera.frame_size = self.frame_size
-            # self.resize_flag = False

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
+from typing import Set
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
 from lib.GameManager import GameManager
+from lib.Settings import Settings
 from lib.Logger import Logger
 
 import sys
@@ -28,9 +30,11 @@ class PhysicsApp(QMainWindow):
         self.keys_pressed = []
         self.debug_mode = False
 
-        self.game_window = GameManager(self.keys_pressed,self.debug_mode)
-        self.game_window.shutdown_signal.connect(self.shutdown)
-        self.setCentralWidget(self.game_window)
+        self.game_manager = GameManager(self.keys_pressed,self.debug_mode)
+        self.game_manager.shutdown_signal.connect(self.shutdown)
+        self.setCentralWidget(self.game_manager)
+
+        self.settings = Settings(self.game_manager)
 
         self.show()
 
@@ -38,7 +42,7 @@ class PhysicsApp(QMainWindow):
         if event.key() == Qt.Key_Escape:
             self.shutdown()
         elif event.key() == Qt.Key_Space:
-            self.game_window.toggle_pause()
+            self.game_manager.toggle_pause()
         elif event.key() == Qt.Key_D and event.key() not in self.keys_pressed:
             if self.debug_mode:
                 self.logger.log(f'Disabling debug mode...')
@@ -56,10 +60,12 @@ class PhysicsApp(QMainWindow):
             self.keys_pressed.remove(event.key())
 
     def closeEvent(self, e):
-        self.game_window.painter.end()
-        self.game_window.game_timer.stop()
+        self.game_manager.painter.end()
+        self.game_manager.game_timer.stop()
+        self.shutdown()
 
     def shutdown(self):
+        self.settings.close()
         self.close()
 
 def main():
