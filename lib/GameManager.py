@@ -17,14 +17,14 @@ import time
 class GameManager(QLabel):
     shutdown_signal = QtCore.pyqtSignal()
 
-    def __init__(self,keys_pressed,debug_mode):
+    def __init__(self,keys_pressed):
         super().__init__()
         self.keys_pressed = keys_pressed
-        self.debug_mode = debug_mode
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.file_paths = FilePaths()
 
+        self.debug_mode = False
         self.fps = 60.0
         self.max_fps = 0.0
         self.prev_fps = 0.0
@@ -171,7 +171,10 @@ class GameManager(QLabel):
         self.camera.paint_launch_controls()
         self.repaint()
         toc = time.time()
-        self.max_fps = 1.0/(toc-tic)
+        try:
+            self.max_fps = 1.0/(toc-tic)
+        except:
+            pass
 
         if self.resize_flag:
             self.resize_canvas(self.resize_size[0],self.resize_size[1])

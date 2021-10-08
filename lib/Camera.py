@@ -17,6 +17,8 @@ class Camera(object):
         self.pose = pose
         self.zoom_level = 1.0
 
+        self.display_fps_overlay = True
+
     def translate(self,vec):
         self.pose = self.pose + vec
 
@@ -36,10 +38,11 @@ class Camera(object):
         self.painter.setBrush(brush)
         self.painter.drawRect(0,0,self.frame_size[0],self.frame_size[1])
 
-        pen,brush = self.paint_utils.set_color('black',1)
-        self.painter.setPen(pen)
-        self.painter.setBrush(brush)
-        self.painter.drawText(3,13,200,75,QtCore.Qt.TextWordWrap,str(int(fps)))
+        if self.display_fps_overlay:
+            pen,brush = self.paint_utils.set_color('black',1)
+            self.painter.setPen(pen)
+            self.painter.setBrush(brush)
+            self.painter.drawText(3,13,200,75,QtCore.Qt.TextWordWrap,str(int(fps)))
     
     def paint_launch_controls(self):
         if type(self.scene.launch_origin)==np.ndarray:
