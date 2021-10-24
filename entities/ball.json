@@ -1,9 +1,11 @@
 {
     "name":"ball",
     "type":"circle",
+    "static":0,
     "color":"random",
     "fill":0,
 
     "radius":10,
-    "pose":[0,0]
+    "pose":[0,0],
+    "mass":1.0
 }

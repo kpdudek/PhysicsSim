@@ -6,7 +6,7 @@ import numpy as np
 from math import pi
 
 class Physics2D(object):
-    def __init__(self,config,mass,collision_bodies=None):
+    def __init__(self,config,mass,collision_bodies):
         self.config = config
         self.collision_bodies = collision_bodies
         self.logger = Logger()

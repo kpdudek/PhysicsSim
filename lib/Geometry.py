@@ -81,10 +81,8 @@ def edge_angle(V0,V1,V2):
 
     # Dot product of the vectors
     cosine_theta = V1[0]*V2[0] + V1[1]*V2[1]
-    
     # Cross product of the vectors
     sin_theta = V1[0]*V2[1] - V1[1]*V2[0]
-    
     # find the angle using the relationships sin(theta)== tan(theta) = sin(theta)/cos(theta)
     edge_angle = atan2(sin_theta,cosine_theta)
     return edge_angle

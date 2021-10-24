@@ -85,7 +85,7 @@ class GameManager(QLabel):
         self.logger.log(f'Mouse press [{e.button()}] at: ({e.x()},{e.y()})',color='g')
         point = np.array([e.x(),e.y()])
         if e.button() == 1:
-            for entity in self.scene.entities:
+            for entity in self.scene.static_entities+self.scene.dynamic_entities:
                 if geom.point_is_collision(self.camera.transform(point.copy()),entity):
                     self.logger.log(f'Selected entity: {entity}')
                     self.scene.item_selected = entity
@@ -95,10 +95,10 @@ class GameManager(QLabel):
             self.scene.launch_origin = point
             self.scene.launch_point = point
         elif e.button() == 2:
-            for entity in self.scene.entities:
+            for entity in self.scene.dynamic_entities:
                 if geom.point_is_collision(self.camera.transform(point.copy()),entity):
                     self.logger.log(f'Removing entity: {entity}')
-                    self.scene.entities.remove(entity)
+                    self.scene.dynamic_entities.remove(entity)
                     return
     
     def mouseMoveEvent(self, e):
@@ -152,7 +152,8 @@ class GameManager(QLabel):
 
     def health_logger(self):
         self.logger.log(f'Average FPS: {self.average_fps}')
-        self.logger.log(f'Number of Entities: {len(self.scene.entities)}')
+        self.logger.log(f'Number of Static Entities: {len(self.scene.static_entities)}')
+        self.logger.log(f'Number of Dynamic Entities: {len(self.scene.dynamic_entities)}')
         self.logger.log(f'Keys pressed: {self.keys_pressed}')
     
     def average_fps_calculator(self):

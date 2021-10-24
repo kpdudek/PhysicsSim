@@ -11,20 +11,7 @@ class Entity(object):
         self.config = config
         self.pose = pose
         self.fps = float(fps)
-        self.default_color = self.paint_utils.random_color()
-        self.physics = None
-        self.physics_lock = False
-
-    # TODO: move physics to the dynamic obstacle child class
-    def add_physics(self,mass,collision_bodies=None):
-        self.physics = Physics2D(self.config,mass,collision_bodies=collision_bodies)
-        self.physics.pose = self.pose.copy()
-
-    def update_physics(self,forces,torques):
-        if self.physics and not self.physics_lock:
-            time = 1.0/self.fps
-            pose = self.physics.accelerate(self.physics.gravity_force,torques,time,collisions=True)
-            self.pose = pose
+        self.default_color = self.paint_utils.random_color()    
     
     def translate(self,vec):
         self.pose = self.pose + vec
@@ -33,10 +20,22 @@ class Entity(object):
     
     def teleport(self,pose):
         self.pose = pose
-        if self.physics:
+        if not self.config['static']:
             self.physics.pose = pose
 
 class DynamicEntity(Entity):
-    def __init__(self,keys_pressed,debug_mode):
-        super().__init__(keys_pressed,debug_mode)
+    def __init__(self,config,pose,fps,collision_bodies):
+        super().__init__(config,pose,fps)
+        self.physics = None
+        self.physics_lock = False
+        
+        self.mass = self.config['mass']
+        self.physics = Physics2D(self.config,self.mass,collision_bodies)
+        self.physics.pose = self.pose.copy()
+
+    def update_physics(self,forces,torques):
+        if self.physics and not self.physics_lock:
+            time = 1.0/self.fps
+            pose = self.physics.accelerate(self.physics.gravity_force,torques,time,collisions=True)
+            self.pose = pose
  

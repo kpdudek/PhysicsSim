@@ -1,11 +1,12 @@
 {
     "name":"boundary",
     "type":"rect",
+    "static":1,
     "color":"black",
     "fill":0,
 
-    "width":1400,
-    "height":800,
-    "vertices":[[0,0],[1400,0],[1400,800],[0,800]],
+    "width":1000,
+    "height":600,
+    "vertices":[[0,0],[1000,0],[1000,600],[0,600]],
     "pose":[0,0]
 }
