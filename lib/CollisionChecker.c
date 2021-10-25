@@ -54,19 +54,6 @@ double circle_mesh(void){
 }
 
 double sphere_collision_check_test(void){
-    // struct Point t1;
-    // struct Point t2;
-    // t1.x = 2.0;
-    // t1.y = 2.0;
-
-    // t2.x = 3.0;
-    // t2.y = 2.0;
-
-    // double dist = 0.0;
-    // dist = euclidian_dist(t1,t2);
-    // printf("Dist: %f\n",dist);
-    // return dist;
-
     double pose_1 [2] = {1,1};
     double pose_2 [2] = {5,1};
     double radius_1 = 1.5;
