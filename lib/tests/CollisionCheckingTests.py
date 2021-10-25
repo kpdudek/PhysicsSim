@@ -12,7 +12,8 @@ from Logger import Logger, FilePaths
 def main():
     logger = Logger()
     file_paths = FilePaths()
-    cc_fun = ctypes.CDLL(f'/{path.strip("/tests")}/{file_paths.cc_lib_path}')
+    
+    cc_fun = ctypes.CDLL(f'{os.path.dirname(path)}/{file_paths.cc_lib_path}')
     res = cc_fun.get_library_version()
     logger.log(f"C collision checking library version: {res}")
 
