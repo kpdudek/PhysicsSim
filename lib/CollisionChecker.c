@@ -28,7 +28,7 @@ double euclidian_dist(struct Point p1, struct Point p2){
     return dist;
 }
 
-double circle_circle(double pose_1 [2], double radius_1, double pose_2 [2], double radius_2){
+int circle_circle(double pose_1 [2], double radius_1, double pose_2 [2], double radius_2){
     int result = 0;
 
     struct Point p1;
@@ -39,25 +39,48 @@ double circle_circle(double pose_1 [2], double radius_1, double pose_2 [2], doub
     p2.y = pose_2[1];
 
     double dist = euclidian_dist(p1,p2);
-    printf("Distance: %f\n",dist);
-    printf("Radius sum: %f\n",radius_1+radius_2);
+    // printf("Distance: %f\n",dist);
+    // printf("Radius sum: %f\n",radius_1+radius_2);
     if(radius_1+radius_2 >= dist){
-        result = 1.0;
+        result = 1;
     }
-    
+    // printf("Result: %d\n",result);
     return result;
 }
 
-double circle_mesh(void){
+int circle_rect(double pose_1 [2], double radius_1, double pose_2 [2], double width, double height){
+    int result = 0;
+
+    struct Point p1;
+    struct Point p2;
+    p1.x = pose_1[0];
+    p1.y = pose_1[1];
+    p2.x = pose_2[0];
+    p2.y = pose_2[1];
+
+    return result;
+}
+
+int circle_mesh(double pose_1 [2], double radius_1, double x_vals [], double y_vals []){
     int result = 0;
     return result;
 }
 
-double sphere_collision_check_test(void){
+int circle_circle_test(void){
     double pose_1 [2] = {1,1};
     double pose_2 [2] = {5,1};
     double radius_1 = 1.5;
     double radius_2 = 1.5;
-    double res = circle_circle(pose_1,radius_1,pose_2,radius_2);
+    int res = circle_circle(pose_1,radius_1,pose_2,radius_2);
+    return res;
+}
+
+int circle_rect_test(void){
+    int res = 0;
+    return res;
+}
+
+int circle_mesh_test(void){
+    int res = 0;
     return res;
 }
