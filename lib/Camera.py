@@ -18,6 +18,7 @@ class Camera(object):
         self.zoom_level = 1.0
 
         self.display_fps_overlay = True
+        self.display_tails = False
 
     def translate(self,vec):
         self.pose = self.pose + vec
@@ -55,7 +56,7 @@ class Camera(object):
             self.painter.drawLine(self.scene.launch_origin[0],self.scene.launch_origin[1],val[0],val[1])
 
     def update(self):
-        for entity in self.scene.static_entities+self.scene.dynamic_entities:
+        for entity in self.scene.static_entities:
             if entity.config['color'] == "None":
                 pass
             
@@ -70,3 +71,32 @@ class Camera(object):
                 self.painter.setPen(pen)
                 self.painter.setBrush(brush)
                 self.painter.drawRect(int(entity.pose[0]+self.pose[0]),int(entity.pose[1]+self.pose[1]),entity.config['width'],entity.config['height'])
+
+        for entity in self.scene.dynamic_entities:
+            if entity.config['color'] == "None":
+                pass
+            
+            elif entity.config['type'] == 'circle':
+                pen,brush = self.paint_utils.set_color(entity.default_color,1)
+                self.painter.setPen(pen)
+                self.painter.setBrush(brush)
+                self.painter.drawEllipse(int(entity.pose[0])-10+self.pose[0],int(entity.pose[1])-10+self.pose[1],20,20)
+            
+            elif entity.config['type'] == 'rect':
+                pen,brush = self.paint_utils.set_color(entity.config['color'],entity.config['fill'])
+                self.painter.setPen(pen)
+                self.painter.setBrush(brush)
+                self.painter.drawRect(int(entity.pose[0]+self.pose[0]),int(entity.pose[1]+self.pose[1]),entity.config['width'],entity.config['height'])
+            
+            if self.display_tails and np.linalg.norm(entity.physics.velocity)>20.0:
+                pen,brush = self.paint_utils.set_color('green',3)
+                self.painter.setPen(pen)
+                self.painter.setBrush(brush)
+                r,c = entity.tail.shape
+                for idx in range(0,c-1):
+                    p1x = entity.tail[0,idx]+self.pose[0]
+                    p1y = entity.tail[1,idx]+self.pose[1]
+                    p2x = entity.tail[0,idx+1]+self.pose[0]
+                    p2y = entity.tail[1,idx+1]+self.pose[1]
+                    self.painter.drawLine(p1x,p1y,p2x,p2y)
+                

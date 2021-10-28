@@ -28,7 +28,7 @@ class Scene(object):
 
     def load_entities(self):
         entities = os.listdir(self.file_paths.entity_path)
-        self.logger.log(f'Enties found: {entities}')
+        self.logger.log(f'Entities found: {entities}')
         for idx,entity in enumerate(entities):
             fp = open(f'{self.file_paths.entity_path}{entity}','r')
             entity_object = json.load(fp)

@@ -49,7 +49,7 @@ class GameManager(QLabel):
         self.average_fps_timer = QtCore.QTimer()
         self.average_fps_timer.timeout.connect(self.average_fps_calculator)
 
-        self.paused = True
+        self.paused = False
         self.scene.load_entities()
         self.start_simulation()
 

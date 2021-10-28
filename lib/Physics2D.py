@@ -31,18 +31,27 @@ class Physics2D(object):
         self.cc_fun.circle_circle.restype = ctypes.c_int
         # Circle Rect collision check
         self.cc_fun.circle_rect.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double]
-        self.cc_fun.circle_rect.restype = ctypes.c_int
+        self.cc_fun.circle_rect.restype = ctypes.c_double
 
     def collision_check(self,pose):
-        collision,reflect = False,np.array([1,-1])
-
+        collision,reflect = False,np.array([1,1])
+        tol = 0.1
         if self.config['type'] == 'circle':
             for body in self.collision_bodies:
                 # collision,reflect = geom.circle_collision_check(pose,self.config['radius'],body)
-                collision = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
-                if collision:
+                res = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
+                if res != -999.0:
+                    print(res)
+                    collision = True
+                    if abs(res-1.57) < tol:
+                        reflect[0] = -1
+                    elif abs(res-0.0) < tol:
+                        reflect[1] = -1
+                    elif abs(res-3.14) < tol:
+                        reflect[1] = -1
+                    elif abs(res+1.57) < tol:
+                        reflect[0] = -1
                     return collision,reflect
-        
         return collision,reflect
 
     def rotational_acceleration(self,torque,time,collisions=True):
@@ -53,7 +62,6 @@ class Physics2D(object):
         self.theta = self.theta + (self.theta_dot * time)
         if self.config['type'] == 'circle':
             delta_x = (2*pi*self.config['radius'])*self.theta
-            # self.logger.log(f'Delta X: {delta_x}')
         return delta_x
 
     def accelerate(self,force,torque,time,collisions=True):

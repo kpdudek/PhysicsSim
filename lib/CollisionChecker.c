@@ -61,6 +61,29 @@ double dot_product(struct Point B, struct Point A){
     return result;
 }
 
+double edge_angle(struct Point V0, struct Point V1, struct Point V2){
+    /*
+    The edge angle is found using unit vectors. This function is passed a set of three vertices where V0 is the shared point of the two vectors.
+    Args:
+        V0 (1x2 numpy array): Shared point of the two vectors
+        V1 (1x2 numpy array): Vector 1 endpoint
+        V2 (1x2 numpy array): Vector 2 endpoint
+    */
+    // This function finds the signed shortest distance between two vectors
+    V1.x = V1.x - V0.x;
+    V1.y = V1.y - V0.y;
+    V2.x = V2.x - V0.x;
+    V2.y = V2.y - V0.y;
+
+    // Dot product of the vectors
+    double cosine_theta = V1.x*V2.x + V1.y*V2.y;
+    // Cross product of the vectors
+    double sin_theta = V1.x*V2.y - V1.y*V2.x;
+    // find the angle using the relationships sin(theta)== tan(theta) = sin(theta)/cos(theta)
+    double edge_angle = atan2(sin_theta,cosine_theta);
+    return edge_angle;
+}
+
 double min_dist_point_to_line(struct Point P, struct Point A, struct Point B){
     /* This function computes the shortest distance between a point and a line segment
         params:
@@ -111,8 +134,8 @@ int circle_circle(double pose_1 [2], double radius_1, double pose_2 [2], double 
     return result;
 }
 
-int circle_rect(double pose_1 [2], double radius_1, double pose_2 [2], double width, double height){
-    int result = 0;
+double circle_rect(double pose_1 [2], double radius_1, double pose_2 [2], double width, double height){
+    double result = -999.0;
 
     struct Point p;
     p.x = pose_1[0];
@@ -132,16 +155,28 @@ int circle_rect(double pose_1 [2], double radius_1, double pose_2 [2], double wi
 
     // Check each edges min dist from the circle origin and if its less than the radious the ball is in collision
     if(min_dist_point_to_line(p,c1,c2) <= radius_1){
-        return result = 1;
+        struct Point V0;
+        V0.x = c1.x+50.0;
+        V0.y = c1.y;
+        return result = edge_angle(c1,V0,c2);
     }
     else if(min_dist_point_to_line(p,c2,c3) <= radius_1){
-        return result = 1;
+        struct Point V0;
+        V0.x = c2.x+50.0;
+        V0.y = c2.y;
+        return result = edge_angle(c2,V0,c3);
     }
     else if(min_dist_point_to_line(p,c3,c4) <= radius_1){
-        return result = 1;
+        struct Point V0;
+        V0.x = c3.x+50.0;
+        V0.y = c3.y;
+        return result = edge_angle(c3,V0,c4);
     }
     else if(min_dist_point_to_line(p,c4,c1) <= radius_1){
-        return result = 1;
+        struct Point V0;
+        V0.x = c4.x+50.0;
+        V0.y = c4.y;
+        return result = edge_angle(c4,V0,c1);
     }
 
     return result;
