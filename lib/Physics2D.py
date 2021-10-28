@@ -41,7 +41,6 @@ class Physics2D(object):
                 # collision,reflect = geom.circle_collision_check(pose,self.config['radius'],body)
                 res = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
                 if res != -999.0:
-                    print(res)
                     collision = True
                     if abs(res-1.57) < tol:
                         reflect[0] = -1
