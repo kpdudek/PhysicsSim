@@ -5,7 +5,7 @@
     "color":"random",
     "fill":0,
 
-    "radius":10,
     "pose":[0,0],
+    "radius":10,
     "mass":1.0
 }

@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 
-from lib.Logger import Logger
+from lib.Logger import Logger, FilePaths
 import lib.Geometry as geom
 import numpy as np
+from numpy.ctypeslib import ndpointer
 from math import pi
+import ctypes
 
 class Physics2D(object):
     def __init__(self,config,mass,collision_bodies):
         self.config = config
         self.collision_bodies = collision_bodies
         self.logger = Logger()
+        self.file_paths = FilePaths()
 
         self.pose = np.array([20.0,20.0])
         self.velocity = np.array([0.0,0.0])
@@ -22,12 +25,21 @@ class Physics2D(object):
         self.gravity_force = np.array([0.0,self.mass * geom.meters_to_pixels(9.8)])
         self.obstacles = []
 
+        self.cc_fun = ctypes.CDLL(f'{self.file_paths.lib_path}/{self.file_paths.cc_lib_path}')
+        # Circle Circle collision check
+        self.cc_fun.circle_circle.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double]
+        self.cc_fun.circle_circle.restype = ctypes.c_int
+        # Circle Rect collision check
+        self.cc_fun.circle_rect.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double]
+        self.cc_fun.circle_rect.restype = ctypes.c_int
+
     def collision_check(self,pose):
-        collision,reflect = False,np.array([1,1])
+        collision,reflect = False,np.array([1,-1])
 
         if self.config['type'] == 'circle':
             for body in self.collision_bodies:
-                collision,reflect = geom.circle_collision_check(pose,self.config['radius'],body)
+                # collision,reflect = geom.circle_collision_check(pose,self.config['radius'],body)
+                collision = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
                 if collision:
                     return collision,reflect
         

@@ -43,11 +43,11 @@ class Scene(object):
                 self.boundary_config_idx = idx
 
     def init_scene(self):
-        self.static_entities.append(Entity(self.entity_configs[self.ground_config_idx],np.array([0,0]),self.fps))
-        self.static_entities[-1].teleport(np.array([250,200]))
+        self.static_entities.append(Entity(self.entity_configs[self.ground_config_idx],np.array([0.0,0.0]),self.fps))
+        self.static_entities[-1].teleport(np.array([250.0,200.0]))
         self.ground_entity = self.static_entities[-1]
 
-        self.static_entities.append(Entity(self.entity_configs[self.boundary_config_idx],np.array([0,0]),self.fps))
+        self.static_entities.append(Entity(self.entity_configs[self.boundary_config_idx],np.array([0.0,0.0]),self.fps))
         self.boundary_entity = self.static_entities[-1]
     
     def spawn_ball(self,pose,velocity):

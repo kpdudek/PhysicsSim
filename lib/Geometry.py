@@ -2,6 +2,7 @@
 
 import numpy as np
 from math import cos, sin, atan2
+import time
 
 def pixels_to_meters(pixels):
     return 0.01 * float(pixels)
@@ -54,6 +55,7 @@ def circle_collision_check(pose,radius,body):
                 else:
                     reflect = np.array([1,-1])
                 return True,reflect
+
     return False,np.array([1,1])
 
 def rotate_2d(vertices,angle):
