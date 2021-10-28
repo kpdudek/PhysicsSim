@@ -2,6 +2,7 @@
 
 import numpy as np
 from math import cos, sin, atan2
+import time
 
 def pixels_to_meters(pixels):
     return 0.01 * float(pixels)
@@ -54,6 +55,7 @@ def circle_collision_check(pose,radius,body):
                 else:
                     reflect = np.array([1,-1])
                 return True,reflect
+
     return False,np.array([1,1])
 
 def rotate_2d(vertices,angle):
@@ -86,3 +88,21 @@ def edge_angle(V0,V1,V2):
     # find the angle using the relationships sin(theta)== tan(theta) = sin(theta)/cos(theta)
     edge_angle = atan2(sin_theta,cosine_theta)
     return edge_angle
+
+class Circle():
+    def __init__(self,pose,radius):
+        self.pose = pose
+        self.radius = radius
+
+class Rectangle():
+    def __init__(self,pose,width,height):
+        self.pose = pose
+        self.width = width
+        self.height = height
+
+class Mesh():
+    def __init__(self,vertices):
+        self.vertices = vertices
+
+    def compute_center_of_mass(self):
+        pass

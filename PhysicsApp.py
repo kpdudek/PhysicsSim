@@ -32,8 +32,9 @@ class PhysicsApp(QMainWindow):
         self.game_manager = GameManager(self.keys_pressed)
         self.game_manager.shutdown_signal.connect(self.shutdown)
         self.settings = Settings(self.game_manager)
+        self.settings.shutdown_signal.connect(self.shutdown)
         self.settings.resize_window_signal.connect(self.resize_window)
-        self.settings.apply()
+        self.settings.apply_action()
 
         self.setCentralWidget(self.game_manager)
         self.show()

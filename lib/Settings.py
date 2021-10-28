@@ -7,6 +7,7 @@ from lib.Logger import Logger, FilePaths
 
 class Settings(QtWidgets.QWidget):
     resize_window_signal = QtCore.pyqtSignal(int,int)
+    shutdown_signal = QtCore.pyqtSignal()
 
     def __init__(self,game_manager):
         super().__init__()
@@ -16,7 +17,9 @@ class Settings(QtWidgets.QWidget):
 
         uic.loadUi(f'{self.file_paths.user_path}ui/settings_window.ui',self)
 
-        self.apply_button.clicked.connect(self.apply)
+        self.apply_button.clicked.connect(self.apply_action)
+        self.quit_button.clicked.connect(self.quit_action)
+        self.pause_button.clicked.connect(self.pause_action)
 
         self.show()
 
@@ -31,6 +34,12 @@ class Settings(QtWidgets.QWidget):
             self.game_manager.camera.display_fps_overlay = True
         else:
             self.game_manager.camera.display_fps_overlay = False
+
+    def toggle_display_tails(self):
+        if self.display_tails_checkbox.isChecked():
+            self.game_manager.camera.display_tails = True
+        else:
+            self.game_manager.camera.display_tails = False
     
     def set_window_size(self):
         x = self.x_size_spinbox.value()
@@ -42,17 +51,20 @@ class Settings(QtWidgets.QWidget):
             self.game_manager.debug_mode = True
         else:
             self.game_manager.debug_mode = False
-
-    def set_pause_state(self):
-        if self.pause_checkbox.isChecked():
-            self.game_manager.paused = True
-        else:
-            self.game_manager.paused = False
     
-    def apply(self):
+    def quit_action(self):
+        self.shutdown_signal.emit()
+
+    def pause_action(self):
+        if self.game_manager.paused:
+            self.game_manager.paused = False
+        else:
+            self.game_manager.paused = True
+    
+    def apply_action(self):
         self.toggle_health_timer()
         self.toggle_fps_overlay_display()
+        self.toggle_display_tails()
         self.set_window_size()
         self.set_debug_mode()
-        self.set_pause_state()
     

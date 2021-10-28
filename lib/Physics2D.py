@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 
-from lib.Logger import Logger
+from lib.Logger import Logger, FilePaths
 import lib.Geometry as geom
 import numpy as np
+from numpy.ctypeslib import ndpointer
 from math import pi
+import ctypes
 
 class Physics2D(object):
     def __init__(self,config,mass,collision_bodies):
         self.config = config
         self.collision_bodies = collision_bodies
         self.logger = Logger()
+        self.file_paths = FilePaths()
 
         self.pose = np.array([20.0,20.0])
         self.velocity = np.array([0.0,0.0])
@@ -22,15 +25,33 @@ class Physics2D(object):
         self.gravity_force = np.array([0.0,self.mass * geom.meters_to_pixels(9.8)])
         self.obstacles = []
 
+        self.cc_fun = ctypes.CDLL(f'{self.file_paths.lib_path}/{self.file_paths.cc_lib_path}')
+        # Circle Circle collision check
+        self.cc_fun.circle_circle.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double]
+        self.cc_fun.circle_circle.restype = ctypes.c_int
+        # Circle Rect collision check
+        self.cc_fun.circle_rect.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double]
+        self.cc_fun.circle_rect.restype = ctypes.c_double
+
     def collision_check(self,pose):
         collision,reflect = False,np.array([1,1])
-
+        tol = 0.1
         if self.config['type'] == 'circle':
             for body in self.collision_bodies:
-                collision,reflect = geom.circle_collision_check(pose,self.config['radius'],body)
-                if collision:
+                # collision,reflect = geom.circle_collision_check(pose,self.config['radius'],body)
+                res = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
+                if res != -999.0:
+                    print(res)
+                    collision = True
+                    if abs(res-1.57) < tol:
+                        reflect[0] = -1
+                    elif abs(res-0.0) < tol:
+                        reflect[1] = -1
+                    elif abs(res-3.14) < tol:
+                        reflect[1] = -1
+                    elif abs(res+1.57) < tol:
+                        reflect[0] = -1
                     return collision,reflect
-        
         return collision,reflect
 
     def rotational_acceleration(self,torque,time,collisions=True):
@@ -41,7 +62,6 @@ class Physics2D(object):
         self.theta = self.theta + (self.theta_dot * time)
         if self.config['type'] == 'circle':
             delta_x = (2*pi*self.config['radius'])*self.theta
-            # self.logger.log(f'Delta X: {delta_x}')
         return delta_x
 
     def accelerate(self,force,torque,time,collisions=True):

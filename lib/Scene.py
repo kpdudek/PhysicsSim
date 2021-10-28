@@ -3,7 +3,7 @@
 from lib.Logger import Logger, FilePaths
 from lib.Entity import Entity, DynamicEntity
 
-import os, json
+import os, json, ctypes
 import numpy as np
 
 class Scene(object):
@@ -20,9 +20,15 @@ class Scene(object):
         self.launch_origin = None
         self.launch_point = None
 
+        # C library for collision checking
+        self.cc_fun = ctypes.CDLL(f'{self.file_paths.lib_path}{self.file_paths.cc_lib_path}')
+        res = self.cc_fun.get_library_version()
+        self.logger.log(f"Scene initialized...")
+        self.logger.log(f"C collision checking library version: {res}")
+
     def load_entities(self):
         entities = os.listdir(self.file_paths.entity_path)
-        self.logger.log(f'Enties found: {entities}')
+        self.logger.log(f'Entities found: {entities}')
         for idx,entity in enumerate(entities):
             fp = open(f'{self.file_paths.entity_path}{entity}','r')
             entity_object = json.load(fp)
@@ -37,11 +43,11 @@ class Scene(object):
                 self.boundary_config_idx = idx
 
     def init_scene(self):
-        self.static_entities.append(Entity(self.entity_configs[self.ground_config_idx],np.array([0,0]),self.fps))
-        self.static_entities[-1].teleport(np.array([250,200]))
+        self.static_entities.append(Entity(self.entity_configs[self.ground_config_idx],np.array([0.0,0.0]),self.fps))
+        self.static_entities[-1].teleport(np.array([250.0,200.0]))
         self.ground_entity = self.static_entities[-1]
 
-        self.static_entities.append(Entity(self.entity_configs[self.boundary_config_idx],np.array([0,0]),self.fps))
+        self.static_entities.append(Entity(self.entity_configs[self.boundary_config_idx],np.array([0.0,0.0]),self.fps))
         self.boundary_entity = self.static_entities[-1]
     
     def spawn_ball(self,pose,velocity):

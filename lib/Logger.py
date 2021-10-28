@@ -8,12 +8,12 @@ class FilePaths(object):
         user_path = str(pathlib.Path().absolute()) + '\\'
         lib_path = user_path + 'lib\\'
         entity_path = user_path + 'entities\\'
-        cc_lib_path = 'cc_lib.dll'
+        cc_lib_path = 'CollisionChecker.dll'
     elif sys.platform == 'linux':    
         user_path = str(pathlib.Path().absolute()) + '/'
         lib_path = user_path + 'lib/'
         entity_path = user_path + 'entities/'
-        cc_lib_path = 'cc_lib.so'
+        cc_lib_path = 'CollisionChecker.so'
     else:
         raise Error('OS not recognized!')
 

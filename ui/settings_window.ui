@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>364</width>
+    <width>538</width>
     <height>337</height>
    </rect>
   </property>
@@ -14,6 +14,13 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="2">
+    <widget class="Line" name="line_4">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="3">
     <widget class="QFrame" name="frame_3">
      <property name="frameShape">
@@ -79,9 +86,15 @@
          </property>
          <item>
           <widget class="QDoubleSpinBox" name="doubleSpinBox">
+           <property name="maximumSize">
+            <size>
+             <width>55</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="font">
             <font>
-             <pointsize>10</pointsize>
+             <pointsize>12</pointsize>
             </font>
            </property>
           </widget>
@@ -127,9 +140,15 @@
          </property>
          <item>
           <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+           <property name="maximumSize">
+            <size>
+             <width>55</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="font">
             <font>
-             <pointsize>10</pointsize>
+             <pointsize>12</pointsize>
             </font>
            </property>
           </widget>
@@ -175,9 +194,15 @@
          </property>
          <item>
           <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+           <property name="maximumSize">
+            <size>
+             <width>55</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="font">
             <font>
-             <pointsize>10</pointsize>
+             <pointsize>12</pointsize>
             </font>
            </property>
           </widget>
@@ -277,6 +302,18 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="display_tails_checkbox">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Display Tails</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QCheckBox" name="debug_mode_checkbox">
         <property name="font">
          <font>
@@ -289,23 +326,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="pause_checkbox">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Pause</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QFrame" name="frame">
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>100</height>
+          <height>75</height>
          </size>
         </property>
         <property name="frameShape">
@@ -409,11 +434,90 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="Line" name="line_4">
+   <item row="1" column="4">
+    <widget class="Line" name="line_5">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QFrame" name="frame_7">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Game</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pause_button">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Pause</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="quit_button">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Quit</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
