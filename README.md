@@ -7,8 +7,12 @@ To run the game you will need to install:
 * python3
 * pip3
 * numpy
-* PyQt5.
+* PyQt5
 
+## Controls
+Spawn Ball: left mouse click and drag
+Delete Ball: right mouse click
+Camera Pan: arrow keys
 
 #### *Ubuntu 18.04:*
 ```
