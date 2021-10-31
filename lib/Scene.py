@@ -3,7 +3,7 @@
 from lib.Logger import Logger, FilePaths
 from lib.Entity import Entity, DynamicEntity
 
-import os, json, ctypes
+import os, json
 import numpy as np
 
 class Scene(object):
@@ -19,12 +19,9 @@ class Scene(object):
         self.item_selected = None
         self.launch_origin = None
         self.launch_point = None
+        self.spawn_count = 1
 
-        # C library for collision checking
-        self.cc_fun = ctypes.CDLL(f'{self.file_paths.lib_path}{self.file_paths.cc_lib_path}')
-        res = self.cc_fun.get_library_version()
         self.logger.log(f"Scene initialized...")
-        self.logger.log(f"C collision checking library version: {res}")
 
     def load_entities(self):
         entities = os.listdir(self.file_paths.entity_path)

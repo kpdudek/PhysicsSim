@@ -12,7 +12,7 @@ from lib.Scene import Scene
 import lib.Geometry as geom
 
 import numpy as np
-import time
+import time, ctypes
 
 class GameManager(QLabel):
     shutdown_signal = QtCore.pyqtSignal()
@@ -30,11 +30,16 @@ class GameManager(QLabel):
         self.prev_fps = 0.0
         self.average_fps = 0.0
 
+        # C library for collision checking
+        self.cc_fun = ctypes.CDLL(f'{self.file_paths.lib_path}{self.file_paths.cc_lib_path}')
+        res = self.cc_fun.get_library_version()
+        self.logger.log(f"C collision checking library version: {res}")
+
         self.resize_flag = False
         self.resize_size = []
         self.scene = Scene(self.fps)
         self.resize_canvas(1400,800)
-        self.camera = Camera(self.frame_size,self.painter,np.array([0,0]),self.scene)
+        self.camera = Camera(self.frame_size,self.painter,self.scene)
 
         self.prev_mouse_pose = None
         self.control_force = np.array([0,0])
@@ -121,7 +126,9 @@ class GameManager(QLabel):
             self.scene.launch_point = np.array([e.x(),e.y()])
             launch_vel = (self.scene.launch_origin-self.scene.launch_point)*10.0
             launch_point = self.camera.transform(self.scene.launch_origin)
-            self.scene.spawn_ball(launch_point,launch_vel)
+            for idx in range(0,self.scene.spawn_count):
+                offset = np.array([35,0])*idx
+                self.scene.spawn_ball(launch_point+offset,launch_vel)
             self.scene.launch_origin = None
             self.scene.launch_point = None
         

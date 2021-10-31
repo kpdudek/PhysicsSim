@@ -16,6 +16,7 @@ class Settings(QtWidgets.QWidget):
         self.file_paths = FilePaths()
 
         uic.loadUi(f'{self.file_paths.user_path}ui/settings_window.ui',self)
+        self.setWindowTitle('Game Configuration')
 
         self.apply_button.clicked.connect(self.apply_action)
         self.quit_button.clicked.connect(self.quit_action)
