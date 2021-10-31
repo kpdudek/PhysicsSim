@@ -12,7 +12,7 @@ from lib.Scene import Scene
 import lib.Geometry as geom
 
 import numpy as np
-import time, ctypes
+import time
 
 class GameManager(QLabel):
     shutdown_signal = QtCore.pyqtSignal()
@@ -29,11 +29,6 @@ class GameManager(QLabel):
         self.max_fps = 0.0
         self.prev_fps = 0.0
         self.average_fps = 0.0
-
-        # C library for collision checking
-        self.cc_fun = ctypes.CDLL(f'{self.file_paths.lib_path}{self.file_paths.cc_lib_path}')
-        res = self.cc_fun.get_library_version()
-        self.logger.log(f"C collision checking library version: {res}")
 
         self.resize_flag = False
         self.resize_size = []

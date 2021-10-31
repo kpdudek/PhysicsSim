@@ -26,13 +26,15 @@ class Entity(object):
             self.physics.pose = pose
 
 class DynamicEntity(Entity):
-    def __init__(self,config,pose,fps,collision_bodies):
+    def __init__(self,config,pose,fps,collision_bodies,cc_fun):
         super().__init__(config,pose,fps)
         self.physics = None
         self.physics_lock = False
+        self.collision_bodies = collision_bodies
+        self.cc_fun = cc_fun
         
         self.mass = self.config['mass']
-        self.physics = Physics2D(self.config,self.mass,collision_bodies)
+        self.physics = Physics2D(self.config,self.mass,self.collision_bodies,self.cc_fun)
         self.physics.pose = self.pose.copy()
 
         self.tail_step = 0
@@ -47,7 +49,6 @@ class DynamicEntity(Entity):
             pose = self.physics.accelerate(self.physics.gravity_force,torques,t,collisions=True)
             self.pose = pose
         
-        #TODO: Only store new tail value every N physics steps. This will make the tail longer but less smooth
         if self.tail_step == self.tail_step_max:
             self.tail = self.tail[:,1:]
             append = self.pose.copy()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>574</width>
-    <height>533</height>
+    <width>576</width>
+    <height>494</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -263,7 +263,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Settings</string>
+         <string>Graphics</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -502,8 +502,14 @@
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item row="1" column="0">
-          <widget class="QRadioButton" name="radioButton">
+          <widget class="QRadioButton" name="spawn_mode_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -530,7 +536,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QRadioButton" name="radioButton_2">
+          <widget class="QRadioButton" name="select_mode_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -553,6 +559,12 @@
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout_4">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item row="0" column="0">
           <widget class="QLabel" name="label_9">
            <property name="font">
@@ -566,7 +578,7 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QRadioButton" name="radioButton_3">
+          <widget class="QRadioButton" name="static_type_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -578,7 +590,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QRadioButton" name="radioButton_4">
+          <widget class="QRadioButton" name="dynamic_type_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -604,6 +616,12 @@
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item row="0" column="0">
           <widget class="QLabel" name="label_10">
            <property name="font">
@@ -617,7 +635,7 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QRadioButton" name="radioButton_5">
+          <widget class="QRadioButton" name="single_pattern_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -632,7 +650,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QRadioButton" name="radioButton_6">
+          <widget class="QRadioButton" name="quad_pattern_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -655,6 +673,12 @@
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout_6">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item row="0" column="0">
           <widget class="QLabel" name="label_11">
            <property name="font">
@@ -668,7 +692,7 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QRadioButton" name="radioButton_7">
+          <widget class="QRadioButton" name="circle_entity_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -683,7 +707,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QRadioButton" name="radioButton_8">
+          <widget class="QRadioButton" name="rectangle_entity_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -701,6 +725,18 @@
        <widget class="Line" name="line_6">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="controls_button">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Controls</string>
         </property>
        </widget>
       </item>
