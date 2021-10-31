@@ -45,15 +45,11 @@ class Camera(object):
         return coord
 
     def clear_display(self,fps):
-        pen,brush = self.paint_utils.set_color('light_gray',1)
-        self.painter.setPen(pen)
-        self.painter.setBrush(brush)
+        self.paint_utils.set_color(self.painter,'light_gray',True)
         self.painter.drawRect(0,0,self.frame_size[0],self.frame_size[1])
 
         if self.display_fps_overlay:
-            pen,brush = self.paint_utils.set_color('black',1)
-            self.painter.setPen(pen)
-            self.painter.setBrush(brush)
+            self.paint_utils.set_color(self.painter,'black',True)
             self.painter.drawText(3,13,200,75,QtCore.Qt.TextWordWrap,str(int(fps)))
     
     def paint_launch_controls(self):
@@ -62,9 +58,7 @@ class Camera(object):
             Drawn in camera frame, so no transform is needed.
         '''
         if type(self.scene.launch_origin)==np.ndarray:
-            pen,brush = self.paint_utils.set_color('white',1)
-            self.painter.setPen(pen)
-            self.painter.setBrush(brush)
+            self.paint_utils.set_color(self.painter,'white',True)
             self.painter.drawEllipse(self.scene.launch_origin[0]-2,self.scene.launch_origin[1]-2,4,4)
             slope = np.array([-1*(self.scene.launch_point[0]-self.scene.launch_origin[0]),-1*(self.scene.launch_point[1]-self.scene.launch_origin[1])])
             val = self.scene.launch_origin + slope
@@ -76,25 +70,19 @@ class Camera(object):
             Drawn in camera frame, so no transform is needed.
         '''
         if entity.config['type'] == 'circle':
-            pen,brush = self.paint_utils.set_color(entity.default_color,entity.config['fill'])
-            self.painter.setPen(pen)
-            self.painter.setBrush(brush)
+            self.paint_utils.set_color(self.painter,entity.default_color,entity.config['fill'])
             pose = self.transform(entity.pose,parent_frame='scene',child_frame='camera')
             rad = entity.config['radius']
             self.painter.drawEllipse(pose[0]-rad,pose[1]-rad,rad*2,rad*2)
         
         elif entity.config['type'] == 'rect':
-            pen,brush = self.paint_utils.set_color(entity.config['color'],entity.config['fill'])
-            self.painter.setPen(pen)
-            self.painter.setBrush(brush)
+            self.paint_utils.set_color(self.painter,entity.config['color'],entity.config['fill'])
             pose = self.transform(entity.pose,parent_frame='scene',child_frame='camera')
             self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
 
         if type(entity)==DynamicEntity:
             if self.display_tails and np.linalg.norm(entity.physics.velocity)>20.0:
-                pen,brush = self.paint_utils.set_color('green',3)
-                self.painter.setPen(pen)
-                self.painter.setBrush(brush)
+                self.paint_utils.set_color(self.painter,'green',True)
                 r,c = entity.tail.shape
                 for idx in range(0,c-1):
                     p1 = self.transform(entity.tail[:,idx],parent_frame='scene',child_frame='camera')

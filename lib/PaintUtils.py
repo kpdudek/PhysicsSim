@@ -41,19 +41,17 @@ class PaintUtils(object):
             key = list(self.colors.keys())[index]
         return self.colors[key]
 
-    def set_color(self,color,fill):
+    def set_color(self,painter,color,fill,width=1):
         '''
+        This function alters the pen and brush of an active QPainter object.
         Arguments:
+            painter [QtGui.QPainter]: Active painter object passed by reference.
             color [str]: Sets the color of what's being painted. Can be either a hex code for a color or the name
             fill [int]: Sets the fill for what's being painted. Either 1 for filled or 0 for outline only.
-        Returns:
-            pen [QtGui.QPen]: A QPen object with the specified color. Fixed width of 1px.
-            brush [QtGui.QBrush]: A QBrush object with the specified color and fill.
+            width [int]: Sets the pen width. Default value is 1.
         '''
-        # TODO: Instead of returning the pen and brush, change the callers passed in pen and brush
-        # TODO: Add an argument for pen width
         pen = QtGui.QPen()
-        pen.setWidth(1)
+        pen.setWidth(width)
         brush = QtGui.QBrush()
         if fill:
             brush.setStyle(Qt.SolidPattern)
@@ -66,5 +64,6 @@ class PaintUtils(object):
         else:
             pen.setColor(QtGui.QColor(color))
             brush.setColor(QtGui.QColor(color))
-
-        return pen,brush
+        
+        painter.setPen(pen)
+        painter.setBrush(brush)
