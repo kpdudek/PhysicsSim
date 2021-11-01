@@ -23,6 +23,7 @@ class GameManager(QLabel):
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.file_paths = FilePaths()
+        self.settings = None
 
         self.debug_mode = False
         self.fps = 60.0
@@ -58,6 +59,10 @@ class GameManager(QLabel):
             self.painter.end()
         except:
             pass
+        if self.settings:
+            self.settings.x_size_spinbox.setValue(width)
+            self.settings.y_size_spinbox.setValue(height)
+        
         self.frame_size = np.array([width,height])
         self.canvas_pixmap = QtGui.QPixmap(self.frame_size[0],self.frame_size[1])
         self.setPixmap(self.canvas_pixmap)
@@ -79,7 +84,7 @@ class GameManager(QLabel):
         self.logger.log('Game starting...',color='g')
         self.scene.init_scene()
         self.game_timer.start(1000/self.fps)
-        self.average_fps_timer.start(1000/5)
+        self.average_fps_timer.start(1000)
 
     def mousePressEvent(self, e):
         self.logger.log(f'Mouse press [{e.button()}] at: ({e.x()},{e.y()})',color='g')
@@ -161,6 +166,8 @@ class GameManager(QLabel):
     def average_fps_calculator(self):
         self.average_fps = (self.max_fps + self.prev_fps) / 2.0
         self.prev_fps = self.max_fps
+        if self.max_fps < self.fps:
+            self.logger.log(f'FPS has dropped below the set value!',color='r')
 
     def game_loop(self):
         tic = time.time()

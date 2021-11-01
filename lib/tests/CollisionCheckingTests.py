@@ -34,7 +34,7 @@ def main():
 
     # Circle Rect collision check
     cc_fun.circle_rect.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double]
-    cc_fun.circle_rect.restype = ctypes.c_int
+    cc_fun.circle_rect.restype = ctypes.c_double
     circ_1 = np.array([1.0,1.0])
     rad_1 = 1.0
     pose = np.array([1.0,1.0])
@@ -43,7 +43,7 @@ def main():
     tic = time.time()
     res = cc_fun.circle_rect(circ_1,rad_1,pose,width,height)
     toc = time.time()
-    logger.log(f'Circle Rect collision check: {res}')
+    logger.log(f'Circle Rect collision check result: {res}')
     logger.log('Circle Rect collision check took: %f seconds'%(toc-tic))
 
     # Plotting

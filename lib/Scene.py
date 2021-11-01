@@ -17,6 +17,8 @@ class Scene(object):
         self.static_entities = []
         self.dynamic_entities = []
 
+        self.mode = 'spawn'
+
         self.item_selected = None
         self.launch_origin = None
         self.launch_point = None

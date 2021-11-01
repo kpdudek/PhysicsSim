@@ -221,7 +221,6 @@ double min_dist_point_to_line_test(void){
     c2.y = 0.0;
 
     double dist = min_dist_point_to_line(p,c1,c2);
-    // printf("Min Dist: %lf\n",x);
 
     return dist;
 }

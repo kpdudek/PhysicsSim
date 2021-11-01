@@ -21,6 +21,9 @@ class Settings(QtWidgets.QWidget):
         self.apply_button.clicked.connect(self.apply_action)
         self.quit_button.clicked.connect(self.quit_action)
         self.pause_button.clicked.connect(self.pause_action)
+        self.clear_scene_button.clicked.connect(self.clear_scene_action)
+
+        self.sync_pause_button()
 
         self.show()
 
@@ -56,11 +59,24 @@ class Settings(QtWidgets.QWidget):
     def quit_action(self):
         self.shutdown_signal.emit()
 
+    def sync_pause_button(self):
+        if self.game_manager.paused:
+            self.pause_button.setText('Play')
+        else:
+            self.pause_button.setText('Pause')
+
     def pause_action(self):
         if self.game_manager.paused:
+            self.pause_button.setText('Pause')
             self.game_manager.paused = False
         else:
+            self.pause_button.setText('Play')
             self.game_manager.paused = True
+
+    def clear_scene_action(self):
+        self.game_manager.scene.static_entities = []
+        self.game_manager.scene.dynamic_entities = []
+        self.game_manager.scene.init_scene()
     
     def apply_action(self):
         self.toggle_health_timer()
