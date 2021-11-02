@@ -31,14 +31,18 @@ class PhysicsApp(QMainWindow):
         self.logger = Logger()
         self.game_manager = GameManager(self.keys_pressed)
         self.game_manager.shutdown_signal.connect(self.shutdown)
+        self.game_manager.resize_signal.connect(self.update_window_spinboxes)
         self.settings = Settings(self.game_manager)
         self.settings.shutdown_signal.connect(self.shutdown)
         self.settings.resize_window_signal.connect(self.resize_window)
-        self.settings.apply_action()
-        self.game_manager.settings = self.settings
+        self.settings.apply_action()    
 
         self.setCentralWidget(self.game_manager)
         self.show()
+
+    def update_window_spinboxes(self,x,y):
+        self.settings.x_size_spinbox.setValue(x)
+        self.settings.y_size_spinbox.setValue(y)
 
     def resize_window(self,x,y):
         self.game_manager.resize_canvas(x,y)

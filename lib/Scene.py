@@ -16,9 +16,10 @@ class Scene(object):
         self.entity_configs = []
         self.static_entities = []
         self.dynamic_entities = []
+        self.load_entities()
+        self.init_scene()
 
-        self.mode = 'spawn'
-
+        self.entity_spawn_type = None
         self.item_selected = None
         self.launch_origin = None
         self.launch_point = None
@@ -38,31 +39,33 @@ class Scene(object):
         self.logger.log(f"Scene initialized...")
 
     def load_entities(self):
+        self.entity_configs = {}
         entities = os.listdir(self.file_paths.entity_path)
         self.logger.log(f'Entities found: {entities}')
         for idx,entity in enumerate(entities):
             fp = open(f'{self.file_paths.entity_path}{entity}','r')
             entity_object = json.load(fp)
-            self.entity_configs.append(entity_object)
+            self.entity_configs.update({f"{entity_object['name']}":entity_object})
             fp.close()
-            
-            if entity_object['name'] == 'ball':
-                self.ball_config_idx = idx
-            elif entity_object['name'] == 'ground':
-                self.ground_config_idx = idx
-            elif entity_object['name'] == 'boundary':
-                self.boundary_config_idx = idx
+    
+    def get_entity_types(self):
+        entity_types = list(self.entity_configs.keys())
+        return entity_types
 
     def init_scene(self):
-        self.static_entities.append(Entity(self.entity_configs[self.ground_config_idx],np.array([0.0,0.0]),self.fps))
+        self.static_entities = []
+        self.dynamic_entities = []
+
+        self.static_entities.append(Entity(self.entity_configs['ground'],np.array([0.0,0.0]),self.fps))
         self.static_entities[-1].teleport(np.array([250.0,200.0]))
         self.ground_entity = self.static_entities[-1]
 
-        self.static_entities.append(Entity(self.entity_configs[self.boundary_config_idx],np.array([0.0,0.0]),self.fps))
+        self.static_entities.append(Entity(self.entity_configs['boundary'],np.array([0.0,0.0]),self.fps))
         self.boundary_entity = self.static_entities[-1]
     
     def spawn_ball(self,pose,velocity):
-        self.dynamic_entities.append(DynamicEntity(self.entity_configs[self.ball_config_idx],pose,self.fps,self.static_entities,self.cc_fun))
+        spawn = self.entity_configs[self.entity_spawn_type]
+        self.dynamic_entities.append(DynamicEntity(spawn,pose,self.fps,self.static_entities,self.cc_fun))
         self.dynamic_entities[-1].physics.velocity = velocity
 
     def update(self,force,torque):

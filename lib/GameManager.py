@@ -16,6 +16,7 @@ import time
 
 class GameManager(QLabel):
     shutdown_signal = QtCore.pyqtSignal()
+    resize_signal = QtCore.pyqtSignal(int,int)
 
     def __init__(self,keys_pressed):
         super().__init__()
@@ -51,7 +52,6 @@ class GameManager(QLabel):
         self.average_fps_timer.timeout.connect(self.average_fps_calculator)
 
         self.paused = False
-        self.scene.load_entities()
         self.start_simulation()
 
     def resize_canvas(self,width,height):
@@ -59,10 +59,6 @@ class GameManager(QLabel):
             self.painter.end()
         except:
             pass
-        if self.settings:
-            self.settings.x_size_spinbox.setValue(width)
-            self.settings.y_size_spinbox.setValue(height)
-        
         self.frame_size = np.array([width,height])
         self.canvas_pixmap = QtGui.QPixmap(self.frame_size[0],self.frame_size[1])
         self.setPixmap(self.canvas_pixmap)
@@ -73,6 +69,7 @@ class GameManager(QLabel):
         except:
             pass
         self.resize_flag = False
+        self.resize_signal.emit(width,height)
 
     def resizeEvent(self, e):
         self.logger.log(f"Window resized to: [{e.size().width()},{e.size().height()}]")
@@ -82,7 +79,6 @@ class GameManager(QLabel):
     def start_simulation(self):
         self.logger.insert_blank_lines(2)
         self.logger.log('Game starting...',color='g')
-        self.scene.init_scene()
         self.game_timer.start(1000/self.fps)
         self.average_fps_timer.start(1000)
 

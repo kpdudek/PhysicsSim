@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>561</width>
-    <height>426</height>
+    <width>530</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,16 +85,10 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QDoubleSpinBox" name="mass_spinbox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QDoubleSpinBox" name="doubleSpinBox">
            <property name="maximumSize">
             <size>
-             <width>60</width>
+             <width>55</width>
              <height>16777215</height>
             </size>
            </property>
@@ -102,15 +96,6 @@
             <font>
              <pointsize>12</pointsize>
             </font>
-           </property>
-           <property name="decimals">
-            <number>1</number>
-           </property>
-           <property name="minimum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>100000.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -154,16 +139,10 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QDoubleSpinBox" name="radius_spinbox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
            <property name="maximumSize">
             <size>
-             <width>60</width>
+             <width>55</width>
              <height>16777215</height>
             </size>
            </property>
@@ -171,18 +150,6 @@
             <font>
              <pointsize>12</pointsize>
             </font>
-           </property>
-           <property name="decimals">
-            <number>1</number>
-           </property>
-           <property name="minimum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>100000.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>10.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -226,16 +193,10 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QDoubleSpinBox" name="max_vel_spinbox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
            <property name="maximumSize">
             <size>
-             <width>60</width>
+             <width>55</width>
              <height>16777215</height>
             </size>
            </property>
@@ -243,15 +204,6 @@
             <font>
              <pointsize>12</pointsize>
             </font>
-           </property>
-           <property name="decimals">
-            <number>1</number>
-           </property>
-           <property name="minimum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>100000.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -453,7 +405,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Window Size</string>
+            <string>Window Size:</string>
            </property>
           </widget>
          </item>
@@ -569,30 +521,6 @@
           <number>0</number>
          </property>
          <item row="1" column="0">
-          <widget class="QLabel" name="label_8">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Mode:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QRadioButton" name="select_mode_radio_button">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Select</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
           <widget class="QRadioButton" name="spawn_mode_radio_button">
            <property name="font">
             <font>
@@ -604,6 +532,30 @@
            </property>
            <property name="checked">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Mode:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QRadioButton" name="select_mode_radio_button">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Select</string>
            </property>
           </widget>
          </item>
@@ -668,61 +620,19 @@
        </widget>
       </item>
       <item>
-       <widget class="QFrame" name="frame_11">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+       <widget class="QLabel" name="label_10">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
         </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+        <property name="text">
+         <string>Entitiy:</string>
         </property>
-        <layout class="QGridLayout" name="gridLayout_6">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_11">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Entity Type:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QRadioButton" name="circle_entity_radio_button">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Circle</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QRadioButton" name="rectangle_entity_radio_button">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Rectangle</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="entity_list_widget"/>
       </item>
       <item>
        <widget class="Line" name="line_6">
