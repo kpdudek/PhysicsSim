@@ -124,7 +124,8 @@ class GameManager(QLabel):
             launch_point = self.camera.transform(self.scene.launch_origin)
             for idx in range(0,self.scene.spawn_count):
                 offset = np.array([35,0])*idx
-                self.scene.spawn_ball(launch_point+offset,launch_vel)
+                if self.scene.mode == 'Spawn':
+                    self.scene.spawn_ball(launch_point+offset,launch_vel)
             self.scene.launch_origin = None
             self.scene.launch_point = None
         

@@ -24,12 +24,22 @@ class Settings(QtWidgets.QWidget):
         self.clear_scene_button.clicked.connect(self.clear_scene_action)
 
         self.entity_list_widget.currentItemChanged.connect(self.set_spawn_type)
-
         self.refresh_entity_type_list()
         self.entity_list_widget.setCurrentRow(0)
-        self.set_spawn_type(self.entity_list_widget.currentItem())
+
+        for widget in self.mode_frame.children():
+            if type(widget)==QtWidgets.QRadioButton:
+                widget.toggled.connect(self.set_mode)
+                if widget.isChecked():
+                    self.game_manager.scene.mode = widget.text()
+        
         self.sync_pause_button()
         self.show()
+    
+    def set_mode(self):
+        option = self.sender()
+        if option.isChecked():
+            self.game_manager.scene.mode = option.text()
 
     def set_spawn_type(self,item):
         self.game_manager.scene.entity_spawn_type = item.text()

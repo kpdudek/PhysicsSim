@@ -20,6 +20,8 @@ class Scene(object):
         self.init_scene()
 
         self.entity_spawn_type = None
+        self.mode = None
+
         self.item_selected = None
         self.launch_origin = None
         self.launch_point = None
