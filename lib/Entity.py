@@ -18,7 +18,7 @@ class Entity(object):
     
     def translate(self,vec):
         self.pose = self.pose + vec
-        if self.physics:
+        if not self.config['static']:
             self.physics.pose = self.physics.pose + vec
     
     def teleport(self,pose):

@@ -118,6 +118,37 @@ double min_dist_point_to_line(struct Point P, struct Point A, struct Point B){
     return dist;
 }
 
+double point_rect(double point [2], double pose_1 [2], double w1, double h1){
+    double result = 0.0;
+    struct Point r1; r1.x = pose_1[0]; r1.y = pose_1[1];
+    struct Point r2; r2.x = pose_1[0]+w1; r2.y = pose_1[1];
+    struct Point r3; r3.x = pose_1[0]+w1; r3.y = pose_1[1]+h1;
+    struct Point r4; r4.x = pose_1[0]; r4.y = pose_1[1]+h1;
+
+    if(point[0] >= r1.x && point[0] <= r2.x && point[1] >= r1.y && point[1] <= r3.y){
+        result = 1.0;
+    }
+    
+    return result;
+}
+
+double point_circle(double pose_1 [2], double pose_2 [2], double radius_2){
+    double result = 0.0;
+
+    struct Point p1;
+    struct Point p2;
+    p1.x = pose_1[0];
+    p1.y = pose_1[1];
+    p2.x = pose_2[0];
+    p2.y = pose_2[1];
+
+    double dist = euclidian_dist(p1,p2);
+    if(radius_2 >= dist){
+        result = 1.0;
+    }
+    return result;
+}
+
 int circle_circle(double pose_1 [2], double radius_1, double pose_2 [2], double radius_2){
     int result = 0;
 
@@ -174,20 +205,6 @@ double circle_rect(double pose_1 [2], double radius_1, double pose_2 [2], double
 
 int circle_mesh(double pose_1 [2], double radius_1, double x_vals [], double y_vals []){
     int result = 0;
-    return result;
-}
-
-int point_in_rect(double point [2], double pose_1 [2], double w1, double h1){
-    int result = 0;
-    struct Point r1; r1.x = pose_1[0]; r1.y = pose_1[1];
-    struct Point r2; r2.x = pose_1[0]+w1; r2.y = pose_1[1];
-    struct Point r3; r3.x = pose_1[0]+w1; r3.y = pose_1[1]+h1;
-    struct Point r4; r4.x = pose_1[0]; r4.y = pose_1[1]+h1;
-
-    if(point[0] >= r1.x && point[0] <= r2.x && point[1] >= r1.y && point[1] <= r3.y){
-        result = 1;
-    }
-    
     return result;
 }
 

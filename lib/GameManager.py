@@ -37,6 +37,7 @@ class GameManager(QLabel):
         self.scene = Scene(self.fps)
         self.resize_canvas(1400,800)
         self.camera = Camera(self.frame_size,self.painter,self.scene)
+        self.scene.camera = self.camera
 
         self.prev_mouse_pose = None
         self.control_force = np.array([0,0])
@@ -85,49 +86,15 @@ class GameManager(QLabel):
     def mousePressEvent(self, e):
         self.logger.log(f'Mouse press [{e.button()}] at: ({e.x()},{e.y()})',color='g')
         point = np.array([e.x(),e.y()])
-        if e.button() == 1:
-            for entity in self.scene.static_entities+self.scene.dynamic_entities:
-                if geom.point_is_collision(self.camera.transform(point.copy()),entity):
-                    self.logger.log(f'Selected entity: {entity}')
-                    self.scene.item_selected = entity
-                    self.prev_mouse_pose = point
-                    self.scene.item_selected.physics_lock = True
-                    return
-            self.scene.launch_origin = point
-            self.scene.launch_point = point
-        elif e.button() == 2:
-            for entity in self.scene.dynamic_entities:
-                if geom.point_is_collision(self.camera.transform(point.copy()),entity):
-                    self.logger.log(f'Removing entity: {entity}')
-                    self.scene.dynamic_entities.remove(entity)
-                    return
+        self.scene.mouse_press(point,e.button())
     
     def mouseMoveEvent(self, e):
-        if self.scene.item_selected:
-            curr_mouse_pose = np.array([e.x(),e.y()])
-            translate = curr_mouse_pose - self.prev_mouse_pose
-            self.scene.item_selected.translate(translate)
-            self.prev_mouse_pose = curr_mouse_pose
-            self.scene.item_selected.physics.velocity = np.array(translate*150)
-            return
-        self.scene.launch_point = np.array([e.x(),e.y()])
+        point = np.array([e.x(),e.y()])
+        self.scene.mouse_move(point,e.button())
 
     def mouseReleaseEvent(self,e):
-        if self.scene.item_selected:
-            self.scene.item_selected.physics_lock = False
-            self.scene.item_selected = None
-            self.prev_mouse_pose = None
-            return
-        if e.button() == 1:
-            self.scene.launch_point = np.array([e.x(),e.y()])
-            launch_vel = (self.scene.launch_origin-self.scene.launch_point)*10.0
-            launch_point = self.camera.transform(self.scene.launch_origin)
-            for idx in range(0,self.scene.spawn_count):
-                offset = np.array([35,0])*idx
-                if self.scene.mode == 'Spawn':
-                    self.scene.spawn_ball(launch_point+offset,launch_vel)
-            self.scene.launch_origin = None
-            self.scene.launch_point = None
+        point = np.array([e.x(),e.y()])
+        self.scene.mouse_release(point,e.button())
         
     def process_keys(self):
         self.control_force = np.array([0,0])
