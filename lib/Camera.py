@@ -5,6 +5,7 @@ from lib.Entity import DynamicEntity
 
 from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
+import lib.Geometry as geom
 import lib.Errors as errors
 import numpy as np
 
@@ -69,20 +70,29 @@ class Camera(object):
             Draws both static and dynamic entities from the scene.
             Drawn in camera frame, so no transform is needed.
         '''
+        pose = self.transform(entity.pose,parent_frame='scene',child_frame='camera')
+
         if entity.config['type'] == 'circle':
             self.paint_utils.set_color(self.painter,entity.default_color,entity.config['fill'])
-            pose = self.transform(entity.pose,parent_frame='scene',child_frame='camera')
             rad = entity.config['radius']
             self.painter.drawEllipse(pose[0]-rad,pose[1]-rad,rad*2,rad*2)
         
         elif entity.config['type'] == 'rect':
-            self.paint_utils.set_color(self.painter,entity.config['color'],entity.config['fill'])
-            pose = self.transform(entity.pose,parent_frame='scene',child_frame='camera')
+            self.paint_utils.set_color(self.painter,entity.config['color'],entity.config['fill'])            
             self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
+
+        unit_vec = np.array([[15.0,0.0],[0.0,15.0]])
+        axes = geom.rotate_2d(unit_vec,entity.theta)
+        x_axis = axes[:,0]
+        y_axis = axes[:,1]
+        self.paint_utils.set_color(self.painter,'red',True,width=3)
+        self.painter.drawLine(pose[0],pose[1],pose[0]+x_axis[0],pose[1]+x_axis[1])
+        self.paint_utils.set_color(self.painter,'green',True,width=3)
+        self.painter.drawLine(pose[0],pose[1],pose[0]+y_axis[0],pose[1]+y_axis[1])
 
         if type(entity)==DynamicEntity:
             if self.display_tails and np.linalg.norm(entity.physics.velocity)>20.0:
-                self.paint_utils.set_color(self.painter,'green',True)
+                self.paint_utils.set_color(self.painter,'orange',True)
                 r,c = entity.tail.shape
                 for idx in range(0,c-1):
                     p1 = self.transform(entity.tail[:,idx],parent_frame='scene',child_frame='camera')

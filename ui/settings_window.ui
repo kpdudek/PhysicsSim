@@ -326,6 +326,9 @@
         <property name="text">
          <string>Display Tails</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>

@@ -62,8 +62,8 @@ class Scene(object):
         self.static_entities = []
         self.dynamic_entities = []
 
-        self.static_entities.append(Entity(self.entity_configs['ground'],np.array([0.0,0.0]),self.fps))
-        self.static_entities[-1].teleport(np.array([250.0,200.0]))
+        self.static_entities.append(Entity(self.entity_configs['ground'],self.fps))
+        # self.static_entities[-1].teleport(np.array([250.0,200.0]))
         self.ground_entity = self.static_entities[-1]
 
         # self.static_entities.append(Entity(self.entity_configs['boundary'],np.array([0.0,0.0]),self.fps))
@@ -71,7 +71,7 @@ class Scene(object):
     
     def spawn_ball(self,pose,velocity):
         spawn = self.entity_configs[self.entity_spawn_type]
-        self.dynamic_entities.append(DynamicEntity(spawn,pose,self.fps,self.static_entities,self.cc_fun))
+        self.dynamic_entities.append(DynamicEntity(spawn,self.fps,self.static_entities,self.cc_fun,pose=pose))
         self.dynamic_entities[-1].physics.velocity = velocity
 
     def update(self,force,torque):

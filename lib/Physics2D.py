@@ -21,7 +21,6 @@ class Physics2D(object):
         self.I = 5.0
         self.mass = mass #kg
         self.gravity_force = np.array([0.0,self.mass * geom.meters_to_pixels(9.8)])
-        self.obstacles = []
 
         # C Collision checking library. Originates from the Scene class
         self.cc_fun = cc_fun
@@ -71,7 +70,6 @@ class Physics2D(object):
             velocity = self.velocity.copy() + delta_v
             pose = self.pose.copy() + (velocity * time)
             res,reflect = self.collision_check(pose.reshape(2))
-            # print(res)
             if res:
                 self.velocity[1] = 0.75 * reflect[1] * self.velocity[1]
                 self.velocity[0] = 0.75 * reflect[0] * self.velocity[0]
@@ -90,4 +88,4 @@ class Physics2D(object):
         if abs(self.velocity[1]) > self.max_velocity:
             self.velocity[1] = self.max_velocity * np.sign(self.velocity[1])
 
-        return self.pose.copy()
+        return self.pose.copy(), self.theta
