@@ -25,7 +25,6 @@ class Settings(QtWidgets.QWidget):
 
         self.entity_list_widget.currentItemChanged.connect(self.set_spawn_type)
         self.refresh_entity_type_list()
-        self.entity_list_widget.setCurrentRow(0)
 
         for widget in self.mode_frame.children():
             if type(widget)==QtWidgets.QRadioButton:
@@ -46,8 +45,16 @@ class Settings(QtWidgets.QWidget):
 
     def refresh_entity_type_list(self):
         entities = self.game_manager.scene.get_entity_types()
+        row_set = False
         for entity in entities:
             self.entity_list_widget.addItem(entity)
+            if entity == 'ball':
+                self.entity_list_widget.setCurrentRow(self.entity_list_widget.count()-1)
+                row_set = True
+
+        # The active row must be set in order to trigger the set_mode() event and give the scene a default spawn type
+        if not row_set:
+            self.entity_list_widget.setCurrentRow(0)
 
     def toggle_health_timer(self):
         if self.game_manager.health_logger_timer.isActive() and not self.health_logger_checkbox.isChecked():
@@ -104,4 +111,3 @@ class Settings(QtWidgets.QWidget):
         self.toggle_display_tails()
         self.set_window_size()
         self.set_debug_mode()
-    

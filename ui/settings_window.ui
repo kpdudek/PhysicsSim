@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>530</width>
-    <height>440</height>
+    <height>444</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -310,6 +310,9 @@
         </property>
         <property name="text">
          <string>Display fps overlay</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

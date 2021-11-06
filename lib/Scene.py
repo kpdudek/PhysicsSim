@@ -35,6 +35,10 @@ class Scene(object):
         # Circle Rect collision check
         self.cc_fun.circle_rect.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double]
         self.cc_fun.circle_rect.restype = ctypes.c_double
+        # Rect Rect collision check
+        self.cc_fun.rect_rect.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double]
+        self.cc_fun.rect_rect.restype = ctypes.c_double
+
         res = self.cc_fun.get_library_version()
         self.logger.log(f"C collision checking library version: {res}")
 
@@ -62,8 +66,8 @@ class Scene(object):
         self.static_entities[-1].teleport(np.array([250.0,200.0]))
         self.ground_entity = self.static_entities[-1]
 
-        self.static_entities.append(Entity(self.entity_configs['boundary'],np.array([0.0,0.0]),self.fps))
-        self.boundary_entity = self.static_entities[-1]
+        # self.static_entities.append(Entity(self.entity_configs['boundary'],np.array([0.0,0.0]),self.fps))
+        # self.boundary_entity = self.static_entities[-1]
     
     def spawn_ball(self,pose,velocity):
         spawn = self.entity_configs[self.entity_spawn_type]

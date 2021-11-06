@@ -63,7 +63,8 @@ double dot_product(struct Point B, struct Point A){
 
 double edge_angle(struct Point V0, struct Point V1, struct Point V2){
     /*
-    The edge angle is found using unit vectors. This function is passed a set of three vertices where V0 is the shared point of the two vectors.
+    The edge angle is found using unit vectors. This function is passed a set of three vertices where V0
+    is the shared point of the two vectors.
     Args:
         V0 (1x2 numpy array): Shared point of the two vectors
         V1 (1x2 numpy array): Vector 1 endpoint
@@ -137,21 +138,11 @@ int circle_circle(double pose_1 [2], double radius_1, double pose_2 [2], double 
 double circle_rect(double pose_1 [2], double radius_1, double pose_2 [2], double width, double height){
     double result = -999.0;
 
-    struct Point p;
-    p.x = pose_1[0];
-    p.y = pose_1[1];
-    struct Point c1;
-    c1.x = pose_2[0];
-    c1.y = pose_2[1];
-    struct Point c2;
-    c2.x = pose_2[0]+width;
-    c2.y = pose_2[1];
-    struct Point c3;
-    c3.x = pose_2[0]+width;
-    c3.y = pose_2[1]+height;
-    struct Point c4;
-    c4.x = pose_2[0];
-    c4.y = pose_2[1]+height;
+    struct Point p; p.x = pose_1[0]; p.y = pose_1[1];
+    struct Point c1; c1.x = pose_2[0]; c1.y = pose_2[1];
+    struct Point c2; c2.x = pose_2[0]+width; c2.y = pose_2[1];
+    struct Point c3; c3.x = pose_2[0]+width; c3.y = pose_2[1]+height;
+    struct Point c4; c4.x = pose_2[0]; c4.y = pose_2[1]+height;
 
     // Check each edges min dist from the circle origin and if its less than the radious the ball is in collision
     if(min_dist_point_to_line(p,c1,c2) <= radius_1){
@@ -178,12 +169,53 @@ double circle_rect(double pose_1 [2], double radius_1, double pose_2 [2], double
         V0.y = c4.y;
         return result = edge_angle(c4,V0,c1);
     }
-
     return result;
 }
 
 int circle_mesh(double pose_1 [2], double radius_1, double x_vals [], double y_vals []){
     int result = 0;
+    return result;
+}
+
+int point_in_rect(double point [2], double pose_1 [2], double w1, double h1){
+    int result = 0;
+    struct Point r1; r1.x = pose_1[0]; r1.y = pose_1[1];
+    struct Point r2; r2.x = pose_1[0]+w1; r2.y = pose_1[1];
+    struct Point r3; r3.x = pose_1[0]+w1; r3.y = pose_1[1]+h1;
+    struct Point r4; r4.x = pose_1[0]; r4.y = pose_1[1]+h1;
+
+    if(point[0] >= r1.x && point[0] <= r2.x && point[1] >= r1.y && point[1] <= r3.y){
+        result = 1;
+    }
+    
+    return result;
+}
+
+double rect_rect(double pose_1 [2], double w1, double h1, double pose_2 [2], double w2, double h2){
+    double result = -999.0;
+    struct Point r1; r1.x = pose_1[0]; r1.y = pose_1[1];
+    struct Point r2; r2.x = pose_1[0]+w1; r2.y = pose_1[1];
+    struct Point r3; r3.x = pose_1[0]+w1; r3.y = pose_1[1]+h1;
+    struct Point r4; r4.x = pose_1[0]; r4.y = pose_1[1]+h1;
+
+    struct Point r5; r5.x = pose_2[0]; r5.y = pose_2[1];
+    struct Point r6; r6.x = pose_2[0]+w2; r6.y = pose_2[1];
+    struct Point r7; r7.x = pose_2[0]+w2; r7.y = pose_2[1]+h2;
+    struct Point r8; r8.x = pose_2[0]; r8.y = pose_2[1]+h2;
+
+    if(r1.x >= r5.x && r1.x <= r6.x && r1.y >= r5.y && r1.y <= r7.y){
+        result = 1.0;
+    }
+    else if(r2.x >= r5.x && r2.x <= r6.x && r2.y >= r5.y && r2.y <= r7.y){
+        result = 1.0;
+    }
+    else if(r3.x >= r5.x && r3.x <= r6.x && r3.y >= r5.y && r3.y <= r7.y){
+        result = 1.0;
+    }
+    else if(r4.x >= r5.x && r4.x <= r6.x && r4.y >= r5.y && r4.y <= r7.y){
+        result = 1.0;
+    }
+
     return result;
 }
 
@@ -209,18 +241,17 @@ int circle_mesh_test(void){
     return res;
 }
 
-double min_dist_point_to_line_test(void){
+double min_dist_point_to_line_test(double px, double py, double c1x, double c1y, double c2x, double c2y){
     struct Point p;
-    p.x = 3.0;
-    p.y = 5.0;
+    p.x = px;
+    p.y = py;
     struct Point c1;
-    c1.x = 0.0;
-    c1.y = 0.0;
+    c1.x = c1x;
+    c1.y = c1y;
     struct Point c2;
-    c2.x = 10.0;
-    c2.y = 0.0;
+    c2.x = c2x;
+    c2.y = c2y;
 
     double dist = min_dist_point_to_line(p,c1,c2);
-
     return dist;
 }

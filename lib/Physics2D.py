@@ -44,6 +44,13 @@ class Physics2D(object):
                     elif abs(res+1.57) < tol:
                         reflect[0] = -1
                     return collision,reflect
+        if self.config['type'] == 'rect':
+            for body in self.collision_bodies:
+                res = self.cc_fun.rect_rect(pose,self.config['width'],self.config['height'],body.pose,body.config['width'],body.config['height'])
+                if res != -999.0:
+                    collision = True
+                    reflect[0] = -1
+                    return collision,reflect
         return collision,reflect
 
     def rotational_acceleration(self,torque,time,collisions=True):
@@ -64,11 +71,12 @@ class Physics2D(object):
             velocity = self.velocity.copy() + delta_v
             pose = self.pose.copy() + (velocity * time)
             res,reflect = self.collision_check(pose.reshape(2))
+            # print(res)
             if res:
                 self.velocity[1] = 0.75 * reflect[1] * self.velocity[1]
                 self.velocity[0] = 0.75 * reflect[0] * self.velocity[0]
-                delta_x = self.rotational_acceleration(torque,time,collisions=True)
-                self.pose[0] = self.pose[0] + delta_x
+                # delta_x = self.rotational_acceleration(torque,time,collisions=True)
+                # self.pose[0] = self.pose[0] + delta_x
             else:
                 self.velocity = self.velocity + delta_v
                 self.pose = self.pose + (self.velocity * time)

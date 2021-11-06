@@ -18,9 +18,10 @@ def main():
     res = cc_fun.get_library_version()
     logger.log(f"C collision checking library version: {res}")
 
+    cc_fun.min_dist_point_to_line_test.argtypes = [ctypes.c_double]*6
     cc_fun.min_dist_point_to_line_test.restype = ctypes.c_double
-    dist = cc_fun.min_dist_point_to_line_test()
-    print(f'Min Dist Result: {dist}')
+    dist = cc_fun.min_dist_point_to_line_test(3.0,8.0,0.0,0.0,10.0,0.0)
+    logger.log(f'Min Dist Result: {dist}')
 
     # Circle Circle collision check
     cc_fun.circle_circle.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double]
@@ -45,6 +46,21 @@ def main():
     toc = time.time()
     logger.log(f'Circle Rect collision check result: {res}')
     logger.log('Circle Rect collision check took: %f seconds'%(toc-tic))
+
+    # Rect Rect collision check
+    cc_fun.rect_rect.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ctypes.c_double]
+    cc_fun.rect_rect.restype = ctypes.c_double
+    pose_1 = np.array([0.0,0.0])
+    w1 = 5.0
+    h1 = 5.0
+    pose_2 = np.array([3.0,3.0])
+    w2 = 5.0
+    h2 = 5.0
+    tic = time.time()
+    res = cc_fun.rect_rect(pose_1,w1,h1,pose_2,w2,h2)
+    toc = time.time()
+    logger.log(f'Rect Rect collision check result: {res}')
+    logger.log('Rect Rect collision check took: %f seconds'%(toc-tic))
 
     # Plotting
     plt.gca().set_aspect('equal')
