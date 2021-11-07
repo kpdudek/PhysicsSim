@@ -86,7 +86,6 @@ class Scene(QtWidgets.QWidget):
         self.dynamic_entities = []
 
         self.static_entities.append(Entity(self.entity_configs['ground'],self.fps))
-        self.ground_entity = self.static_entities[-1]
     
     def spawn_entity(self,pose,velocity):
         spawn = self.entity_configs[self.entity_spawn_type]
@@ -96,7 +95,7 @@ class Scene(QtWidgets.QWidget):
         elif self.entity_spawn_physics == 'Dynamic':
             self.dynamic_entities.append(DynamicEntity(spawn,self.fps,self.static_entities+self.dynamic_entities,self.cc_fun,pose=pose))
             self.dynamic_entities[-1].physics.velocity = velocity
-            self.static_entities[-1].config['static'] = 0
+            self.dynamic_entities[-1].config['static'] = 0
 
     def point_is_collision(self,pose,entity):
         if entity.config['type']=='circle':
