@@ -13,7 +13,7 @@ from lib.Scene import Scene
 import lib.Geometry as geom
 
 import numpy as np
-import time
+import time, math
 
 class GameManager(QLabel):
     shutdown_signal = QtCore.pyqtSignal()
@@ -141,15 +141,40 @@ class GameManager(QLabel):
         if self.max_fps < self.fps:
             self.logger.log(f'FPS has dropped below the set value!',color='r')
 
+    def run_performance_test(self):
+        self.performance_test_timer = QtCore.QTimer()
+        self.performance_test_timer.timeout.connect(self.performance_test_worker)
+        self.test_hz = 60
+        self.fail_limit = self.test_hz * 3
+        self.fail_count = 0
+        self.pose = np.array([500.0,200.0])
+        self.velocity = np.array([0.0,-400.0])
+        self.theta = math.radians(5.0)
+        self.entity_type = 'ball'
+        self.performance_test_timer.start(1000/self.test_hz)
+
+    def performance_test_worker(self):
+        if self.average_fps < self.fps:
+            self.fail_count += 1
+            if self.fail_count > self.fail_limit:
+                self.logger.log("Performance test finished!")
+                self.logger.log(f"Balls Spawned: {len(self.scene.static_entities+self.scene.dynamic_entities)}")
+                self.scene.init_scene()
+                self.performance_test_timer.stop()
+        else:
+            vel = geom.rotate_2d(self.velocity.reshape(2,1),self.theta)
+            self.scene.spawn_entity(self.pose,vel.reshape(2),entity_type=self.entity_type)
+
     def game_loop(self):
         tic = time.time()
         self.process_keys()
-        self.camera.clear_display(self.average_fps)
+        
         
         if not self.paused:
             self.scene.update(self.control_force*100.0,self.control_torque)
+        
+        self.camera.clear_display(self.average_fps)
         self.camera.update()
-
         self.camera.paint_launch_controls()
         self.repaint()
         toc = time.time()

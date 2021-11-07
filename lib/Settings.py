@@ -23,6 +23,7 @@ class Settings(QtWidgets.QWidget):
         self.pause_button.clicked.connect(self.pause_action)
         self.clear_scene_button.clicked.connect(self.clear_scene_action)
         self.reset_camera_button.clicked.connect(self.reset_camera_action)
+        self.performance_test_button.clicked.connect(self.run_performance_test)
 
         self.entity_list_widget.currentItemChanged.connect(self.set_spawn_type)
         self.refresh_entity_type_list()
@@ -119,6 +120,9 @@ class Settings(QtWidgets.QWidget):
 
     def clear_scene_action(self):
         self.game_manager.scene.init_scene()
+
+    def run_performance_test(self):
+        self.game_manager.run_performance_test()
     
     def apply_action(self):
         self.toggle_health_timer()

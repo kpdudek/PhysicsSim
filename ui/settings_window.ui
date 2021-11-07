@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>518</width>
+    <width>523</width>
     <height>466</height>
    </rect>
   </property>
@@ -243,6 +243,18 @@
         </property>
         <property name="text">
          <string>Reset Camera</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="performance_test_button">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Performance Test</string>
         </property>
        </widget>
       </item>

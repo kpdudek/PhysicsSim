@@ -29,17 +29,16 @@ class Entity(object):
             self.physics.pose = pose
 
 class DynamicEntity(Entity):
-    def __init__(self,config,fps,collision_bodies,cc_fun,pose=None):
+    def __init__(self,config,fps,cc_fun,pose=None):
         super().__init__(config,fps)
         self.physics = None
         self.physics_lock = False
-        self.collision_bodies = collision_bodies
         self.cc_fun = cc_fun
         if type(pose)==np.ndarray:
             self.pose = pose
         
         self.mass = self.config['mass']
-        self.physics = Physics2D(self.config,self.mass,self.collision_bodies,self.cc_fun)
+        self.physics = Physics2D(self.config,self.mass,self.cc_fun,self)
         self.physics.pose = self.pose.copy()
 
         self.tail_step = 0
@@ -48,10 +47,10 @@ class DynamicEntity(Entity):
         self.tail[0,:] = self.tail[0,:]*self.pose[0]
         self.tail[1,:] = self.tail[1,:]*self.pose[1]
 
-    def update_physics(self,forces,torques):
+    def update_physics(self,collision_bodies,forces,torques):
         if self.physics and not self.physics_lock:
             t = 1.0/self.fps
-            pose,theta = self.physics.accelerate(self.physics.gravity_force,torques,t,collisions=True)
+            pose,theta = self.physics.accelerate(self.physics.gravity_force,torques,t,collision_bodies)
             self.pose = pose
             self.theta = theta
         

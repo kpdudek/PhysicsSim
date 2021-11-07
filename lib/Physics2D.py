@@ -6,11 +6,11 @@ import numpy as np
 from math import pi
 
 class Physics2D(object):
-    def __init__(self,config,mass,collision_bodies,cc_fun):
+    def __init__(self,config,mass,cc_fun,parent):
         self.config = config
-        self.collision_bodies = collision_bodies
         self.logger = Logger()
         self.file_paths = FilePaths()
+        self.parent = parent
 
         self.pose = np.array([20.0,20.0])
         self.velocity = np.array([0.0,0.0])
@@ -25,13 +25,14 @@ class Physics2D(object):
         # C Collision checking library. Originates from the Scene class
         self.cc_fun = cc_fun
 
-    def collision_check(self,pose):
+    def collision_check(self,pose,collision_bodies):
         collision,reflect = False,np.array([1,1])
         tol = 0.1
         if self.config['type'] == 'circle':
-            for body in self.collision_bodies:
-                # collision,reflect = geom.circle_collision_check(pose,self.config['radius'],body)
-                if body.config['type'] == 'rect':
+            for body in collision_bodies:
+                if body == self.parent:
+                    pass
+                elif body.config['type'] == 'rect':
                     res = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
                     if res != -999.0:
                         collision = True
@@ -44,9 +45,11 @@ class Physics2D(object):
                         elif abs(res+1.57) < tol:
                             reflect[0] = -1
                         return collision,reflect
-        if self.config['type'] == 'rect':
-            for body in self.collision_bodies:
-                if body.config['type'] == 'rect':
+        elif self.config['type'] == 'rect':
+            for body in collision_bodies:
+                if body == self.parent:
+                    pass
+                elif body.config['type'] == 'rect':
                     res = self.cc_fun.rect_rect(pose,self.config['width'],self.config['height'],body.pose,body.config['width'],body.config['height'])
                     if res != -999.0:
                         collision = True
@@ -70,14 +73,14 @@ class Physics2D(object):
             delta_x = (2*pi*self.config['radius'])*self.theta
         return delta_x
 
-    def accelerate(self,force,torque,time,collisions=True):
+    def accelerate(self,force,torque,time,collision_bodies):
         acceleration = force / self.mass
         delta_v = acceleration * time
 
-        if collisions:
+        if collision_bodies:
             velocity = self.velocity.copy() + delta_v
             pose = self.pose.copy() + (velocity * time)
-            res,reflect = self.collision_check(pose.reshape(2))
+            res,reflect = self.collision_check(pose.reshape(2),collision_bodies)
             if res:
                 self.velocity[1] = 0.75 * reflect[1] * self.velocity[1]
                 self.velocity[0] = 0.75 * reflect[0] * self.velocity[0]

@@ -83,14 +83,16 @@ class Camera(object):
             self.paint_utils.set_color(self.painter,entity.default_color,entity.config['fill'])
             rad = entity.config['radius']
             self.painter.drawEllipse(pose[0]-rad,pose[1]-rad,rad*2,rad*2)
-            self.paint_utils.set_color(self.painter,'black',0)
-            self.painter.drawEllipse(pose[0]-rad,pose[1]-rad,rad*2,rad*2)
+            if self.game_manager.debug_mode:
+                self.paint_utils.set_color(self.painter,'black',0)
+                self.painter.drawEllipse(pose[0]-rad,pose[1]-rad,rad*2,rad*2)
         
         elif entity.config['type'] == 'rect':
             self.paint_utils.set_color(self.painter,entity.config['color'],entity.config['fill'])            
             self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
-            self.paint_utils.set_color(self.painter,'black',0)            
-            self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
+            if self.game_manager.debug_mode:
+                self.paint_utils.set_color(self.painter,'black',0)            
+                self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
 
         if self.game_manager.debug_mode:
             unit_vec = np.array([[15.0,0.0],[0.0,15.0]])

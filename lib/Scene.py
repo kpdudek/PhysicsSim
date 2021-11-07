@@ -84,16 +84,19 @@ class Scene(QtWidgets.QWidget):
     def init_scene(self):
         self.static_entities = []
         self.dynamic_entities = []
-
         self.static_entities.append(Entity(self.entity_configs['ground'],self.fps))
     
-    def spawn_entity(self,pose,velocity):
-        spawn = self.entity_configs[self.entity_spawn_type]
+    def spawn_entity(self,pose,velocity,entity_type=None):
+        if not entity_type:
+            entity_config = self.entity_configs[self.entity_spawn_type]
+        else:
+            entity_config = self.entity_configs[entity_type]
+        
         if self.entity_spawn_physics == 'Static':
-            self.static_entities.append(Entity(spawn,self.fps,pose=pose))
+            self.static_entities.append(Entity(entity_config,self.fps,pose=pose))
             self.static_entities[-1].config['static'] = 1
         elif self.entity_spawn_physics == 'Dynamic':
-            self.dynamic_entities.append(DynamicEntity(spawn,self.fps,self.static_entities+self.dynamic_entities,self.cc_fun,pose=pose))
+            self.dynamic_entities.append(DynamicEntity(entity_config,self.fps,self.cc_fun,pose=pose))
             self.dynamic_entities[-1].physics.velocity = velocity
             self.dynamic_entities[-1].config['static'] = 0
 
@@ -158,4 +161,4 @@ class Scene(QtWidgets.QWidget):
 
     def update(self,force,torque):
         for entity in self.dynamic_entities:
-            entity.update_physics(force,torque)
+            entity.update_physics(self.static_entities+self.dynamic_entities,force,torque)
