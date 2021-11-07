@@ -68,8 +68,10 @@ class PhysicsApp(QMainWindow):
         self.shutdown()
 
     def shutdown(self):
+        self.logger.log('Shutdown signal received.')
         self.settings.close()
         self.close()
+        QApplication.processEvents()
 
 def main():
     app = QApplication(sys.argv)

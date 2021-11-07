@@ -5,8 +5,8 @@
     "color":"brown",
     "fill":1,
 
-    "pose":[-5000,500.0],
-    "width":10000.0,
-    "height":1000.0,
+    "pose":[0,550.0],
+    "width":1000.0,
+    "height":50.0,
     "mass":100.0
 }

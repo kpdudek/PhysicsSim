@@ -22,6 +22,7 @@ class Settings(QtWidgets.QWidget):
         self.quit_button.clicked.connect(self.quit_action)
         self.pause_button.clicked.connect(self.pause_action)
         self.clear_scene_button.clicked.connect(self.clear_scene_action)
+        self.reset_camera_button.clicked.connect(self.reset_camera_action)
 
         self.entity_list_widget.currentItemChanged.connect(self.set_spawn_type)
         self.refresh_entity_type_list()
@@ -31,6 +32,12 @@ class Settings(QtWidgets.QWidget):
                 widget.toggled.connect(self.set_mode)
                 if widget.isChecked():
                     self.game_manager.scene.mode = widget.text()
+
+        for widget in self.spawn_physics_frame.children():
+            if type(widget)==QtWidgets.QRadioButton:
+                widget.toggled.connect(self.set_spawn_physics)
+                if widget.isChecked():
+                    self.game_manager.scene.entity_spawn_physics = widget.text()
         
         self.sync_pause_button()
         self.show()
@@ -42,6 +49,14 @@ class Settings(QtWidgets.QWidget):
 
     def set_spawn_type(self,item):
         self.game_manager.scene.entity_spawn_type = item.text()
+
+    def set_spawn_physics(self):
+        option = self.sender()
+        if option.isChecked():
+            self.game_manager.scene.entity_spawn_physics = option.text()
+
+    def reset_camera_action(self):
+        self.game_manager.camera.reset()
 
     def refresh_entity_type_list(self):
         entities = self.game_manager.scene.get_entity_types()

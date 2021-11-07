@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from PyQt5 import QtCore, QtWidgets
 from lib.Logger import Logger, FilePaths
 from lib.Entity import Entity, DynamicEntity
 
@@ -8,11 +9,15 @@ import numpy as np
 import lib.Geometry as geom
 from numpy.ctypeslib import ndpointer
 
-class Scene(object):
-    def __init__(self,fps):
+class Scene(QtWidgets.QWidget):
+    shutdown_signal = QtCore.pyqtSignal()
+
+    def __init__(self,fps,game_manager):
+        super().__init__()
         self.logger = Logger()
         self.file_paths = FilePaths()
         self.fps = fps
+        self.game_manager = game_manager
 
         self.entity_configs = []
         self.static_entities = []
@@ -20,6 +25,7 @@ class Scene(object):
         self.load_entities()
         self.init_scene()
 
+        self.entity_spawn_physics = None
         self.entity_spawn_type = None
         self.mode = None
 
@@ -29,7 +35,14 @@ class Scene(object):
         self.spawn_count = 1
 
         # C library for collision checking
-        self.cc_fun = ctypes.CDLL(f'{self.file_paths.lib_path}{self.file_paths.cc_lib_path}')
+        try:
+            self.cc_fun = ctypes.CDLL(f'{self.file_paths.lib_path}{self.file_paths.cc_lib_path}')
+        except:
+            self.logger.log('Failed to initialize collision checking library!',color='r')
+            self.shutdown_timer = QtCore.QTimer()
+            self.shutdown_timer.timeout.connect(self.shutdown_event)
+            self.shutdown_timer.start(500)
+            return
         # Circle Circle collision check
         self.cc_fun.circle_circle.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double]
         self.cc_fun.circle_circle.restype = ctypes.c_int
@@ -50,6 +63,9 @@ class Scene(object):
         self.logger.log(f"C collision checking library version: {res}")
 
         self.logger.log(f"Scene initialized...")
+
+    def shutdown_event(self):
+        self.shutdown_signal.emit()
 
     def load_entities(self):
         self.entity_configs = {}
@@ -74,8 +90,13 @@ class Scene(object):
     
     def spawn_entity(self,pose,velocity):
         spawn = self.entity_configs[self.entity_spawn_type]
-        self.dynamic_entities.append(DynamicEntity(spawn,self.fps,self.static_entities,self.cc_fun,pose=pose))
-        self.dynamic_entities[-1].physics.velocity = velocity
+        if self.entity_spawn_physics == 'Static':
+            self.static_entities.append(Entity(spawn,self.fps,pose=pose))
+            self.static_entities[-1].config['static'] = 1
+        elif self.entity_spawn_physics == 'Dynamic':
+            self.dynamic_entities.append(DynamicEntity(spawn,self.fps,self.static_entities+self.dynamic_entities,self.cc_fun,pose=pose))
+            self.dynamic_entities[-1].physics.velocity = velocity
+            self.static_entities[-1].config['static'] = 0
 
     def point_is_collision(self,pose,entity):
         if entity.config['type']=='circle':
@@ -127,7 +148,7 @@ class Scene(object):
             self.item_selected = None
             self.prev_mouse_pose = None
             return
-        if id == 1:
+        elif id == 1:
             self.launch_point = pose
             launch_vel = (self.launch_origin-self.launch_point)*10.0
             launch_point = self.camera.transform(self.launch_origin)

@@ -7,11 +7,13 @@ import numpy as np
 import time
 
 class Entity(object):
-    def __init__(self,config,fps):
+    def __init__(self,config,fps,pose=None):
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.config = config
         self.pose = np.array([self.config['pose'][0],self.config['pose'][1]])
+        if type(pose)==np.ndarray:
+            self.pose = pose
         self.theta = 0.0
         self.fps = float(fps)
         self.default_color = self.paint_utils.random_color()   

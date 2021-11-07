@@ -31,25 +31,33 @@ class Physics2D(object):
         if self.config['type'] == 'circle':
             for body in self.collision_bodies:
                 # collision,reflect = geom.circle_collision_check(pose,self.config['radius'],body)
-                res = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
-                if res != -999.0:
-                    collision = True
-                    if abs(res-1.57) < tol:
-                        reflect[0] = -1
-                    elif abs(res-0.0) < tol:
-                        reflect[1] = -1
-                    elif abs(res-3.14) < tol:
-                        reflect[1] = -1
-                    elif abs(res+1.57) < tol:
-                        reflect[0] = -1
-                    return collision,reflect
+                if body.config['type'] == 'rect':
+                    res = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
+                    if res != -999.0:
+                        collision = True
+                        if abs(res-1.57) < tol:
+                            reflect[0] = -1
+                        elif abs(res-0.0) < tol:
+                            reflect[1] = -1
+                        elif abs(res-3.14) < tol:
+                            reflect[1] = -1
+                        elif abs(res+1.57) < tol:
+                            reflect[0] = -1
+                        return collision,reflect
         if self.config['type'] == 'rect':
             for body in self.collision_bodies:
-                res = self.cc_fun.rect_rect(pose,self.config['width'],self.config['height'],body.pose,body.config['width'],body.config['height'])
-                if res != -999.0:
-                    collision = True
-                    reflect[0] = -1
-                    return collision,reflect
+                if body.config['type'] == 'rect':
+                    res = self.cc_fun.rect_rect(pose,self.config['width'],self.config['height'],body.pose,body.config['width'],body.config['height'])
+                    if res != -999.0:
+                        collision = True
+                        reflect[0] = -1
+                        return collision,reflect
+                elif body.config['type'] == 'circle':
+                    res = self.cc_fun.circle_rect(body.pose,body.config['radius'],self.pose,self.config['width'],self.config['height'])
+                    if res != -999.0:
+                        collision = True
+                        reflect[0] = -1
+                        return collision,reflect
         return collision,reflect
 
     def rotational_acceleration(self,torque,time,collisions=True):

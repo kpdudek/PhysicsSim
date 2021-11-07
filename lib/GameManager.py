@@ -2,6 +2,7 @@
 
 from PyQt5 import QtCore
 from PyQt5 import QtGui
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel
 
@@ -34,9 +35,10 @@ class GameManager(QLabel):
 
         self.resize_flag = False
         self.resize_size = []
-        self.scene = Scene(self.fps)
+        self.scene = Scene(self.fps,self)
+        self.scene.shutdown_signal.connect(self.shutdown_event)
         self.resize_canvas(1400,800)
-        self.camera = Camera(self.frame_size,self.painter,self.scene)
+        self.camera = Camera(self.frame_size,self.painter,self.scene,self)
         self.scene.camera = self.camera
 
         self.prev_mouse_pose = None
@@ -54,6 +56,10 @@ class GameManager(QLabel):
 
         self.paused = False
         self.start_simulation()
+
+    def shutdown_event(self):
+        self.shutdown_signal.emit()
+        QApplication.processEvents()
 
     def resize_canvas(self,width,height):
         try:
@@ -126,6 +132,8 @@ class GameManager(QLabel):
         self.logger.log(f'Number of Static Entities: {len(self.scene.static_entities)}')
         self.logger.log(f'Number of Dynamic Entities: {len(self.scene.dynamic_entities)}')
         self.logger.log(f'Keys pressed: {self.keys_pressed}')
+        if self.debug_mode:
+            self.logger.log('Debug Mode...')
     
     def average_fps_calculator(self):
         self.average_fps = (self.max_fps + self.prev_fps) / 2.0

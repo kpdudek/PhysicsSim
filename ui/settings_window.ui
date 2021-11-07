@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>530</width>
-    <height>444</height>
+    <width>518</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -235,6 +235,18 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="reset_camera_button">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Reset Camera</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -311,9 +323,6 @@
         <property name="text">
          <string>Display fps overlay</string>
         </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
        </widget>
       </item>
       <item>
@@ -325,9 +334,6 @@
         </property>
         <property name="text">
          <string>Display Tails</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -526,7 +532,7 @@
          <property name="bottomMargin">
           <number>0</number>
          </property>
-         <item row="1" column="0">
+         <item row="2" column="0">
           <widget class="QRadioButton" name="spawn_mode_radio_button">
            <property name="font">
             <font>
@@ -549,11 +555,23 @@
             </font>
            </property>
            <property name="text">
-            <string>Mode:</string>
+            <string>Cursor Mode:</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="4" column="0">
+          <widget class="QRadioButton" name="draw_mode_radio_button">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Draw</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
           <widget class="QRadioButton" name="select_mode_radio_button">
            <property name="font">
             <font>
@@ -569,7 +587,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QFrame" name="spawn_type_frame">
+       <widget class="QFrame" name="spawn_physics_frame">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -591,12 +609,12 @@
             </font>
            </property>
            <property name="text">
-            <string>Spawn Type:</string>
+            <string>Entity Physics:</string>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QRadioButton" name="static_type_radio_button">
+          <widget class="QRadioButton" name="static_physics_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
@@ -608,7 +626,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QRadioButton" name="dynamic_type_radio_button">
+          <widget class="QRadioButton" name="dynamic_physics_radio_button">
            <property name="font">
             <font>
              <pointsize>10</pointsize>

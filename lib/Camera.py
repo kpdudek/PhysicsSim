@@ -10,13 +10,14 @@ import lib.Errors as errors
 import numpy as np
 
 class Camera(object):
-    def __init__(self,frame_size,painter,scene):
+    def __init__(self,frame_size,painter,scene,game_manager):
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.frame_size = frame_size
         self.painter = painter
         self.scene = scene
         self.zoom_level = 1.0
+        self.game_manager = game_manager
 
         self.frames = {
             'camera':np.array([0.0,0.0]),
@@ -26,8 +27,14 @@ class Camera(object):
         self.display_fps_overlay = True
         self.display_tails = False
 
+    def reset(self):
+        self.teleport(np.zeros((2)))
+
+    def teleport(self,pose):
+        self.frames['scene'] = pose
+    
     def translate(self,vec):
-        self.frames['scene'] = self.frames['scene'] + vec
+        self.frames['scene'] = self.frames['scene'] + -1*vec
 
     def zoom(self,multiplier):
         self.zoom_level = multiplier
@@ -76,19 +83,24 @@ class Camera(object):
             self.paint_utils.set_color(self.painter,entity.default_color,entity.config['fill'])
             rad = entity.config['radius']
             self.painter.drawEllipse(pose[0]-rad,pose[1]-rad,rad*2,rad*2)
+            self.paint_utils.set_color(self.painter,'black',0)
+            self.painter.drawEllipse(pose[0]-rad,pose[1]-rad,rad*2,rad*2)
         
         elif entity.config['type'] == 'rect':
             self.paint_utils.set_color(self.painter,entity.config['color'],entity.config['fill'])            
             self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
+            self.paint_utils.set_color(self.painter,'black',0)            
+            self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
 
-        unit_vec = np.array([[15.0,0.0],[0.0,15.0]])
-        axes = geom.rotate_2d(unit_vec,entity.theta)
-        x_axis = axes[:,0]
-        y_axis = axes[:,1]
-        self.paint_utils.set_color(self.painter,'red',True,width=3)
-        self.painter.drawLine(pose[0],pose[1],pose[0]+x_axis[0],pose[1]+x_axis[1])
-        self.paint_utils.set_color(self.painter,'green',True,width=3)
-        self.painter.drawLine(pose[0],pose[1],pose[0]+y_axis[0],pose[1]+y_axis[1])
+        if self.game_manager.debug_mode:
+            unit_vec = np.array([[15.0,0.0],[0.0,15.0]])
+            axes = geom.rotate_2d(unit_vec,entity.theta)
+            x_axis = axes[:,0]
+            y_axis = axes[:,1]
+            self.paint_utils.set_color(self.painter,'red',True,width=3)
+            self.painter.drawLine(pose[0],pose[1],pose[0]+x_axis[0],pose[1]+x_axis[1])
+            self.paint_utils.set_color(self.painter,'green',True,width=3)
+            self.painter.drawLine(pose[0],pose[1],pose[0]+y_axis[0],pose[1]+y_axis[1])
 
         if type(entity)==DynamicEntity:
             if self.display_tails and np.linalg.norm(entity.physics.velocity)>20.0:
