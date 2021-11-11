@@ -4,7 +4,6 @@ from lib.Physics2D import Physics2D
 from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
 import numpy as np
-import time
 
 class Entity(object):
     def __init__(self,config,fps,pose=None):
@@ -20,13 +19,9 @@ class Entity(object):
     
     def translate(self,vec):
         self.pose = self.pose + vec
-        # if not self.config['static']:
-        #     self.physics.pose = self.physics.pose + vec
     
     def teleport(self,pose):
         self.pose = pose
-        # if not self.config['static']:
-        #     self.physics.pose = pose
 
 class DynamicEntity(Entity):
     def __init__(self,config,fps,cc_fun,pose=None):
@@ -49,12 +44,10 @@ class DynamicEntity(Entity):
 
     def translate(self,vec):
         self.pose = self.pose + vec
-        # if not self.config['static']:
         self.physics.pose = self.physics.pose + vec
     
     def teleport(self,pose):
         self.pose = pose
-        # if not self.config['static']:
         self.physics.pose = pose
 
     def update_physics(self,collision_bodies,forces,torques):

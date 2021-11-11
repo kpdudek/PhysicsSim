@@ -117,9 +117,6 @@ class Camera(object):
         '''
             Draws all entities in the scene.
         '''
-        for entity in self.scene.static_entities:
-            self.paint_entity(entity)
-
-        for entity in self.scene.dynamic_entities:
+        for entity in self.scene.entities:
             self.paint_entity(entity)
                 

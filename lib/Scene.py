@@ -20,8 +20,7 @@ class Scene(QtWidgets.QWidget):
         self.game_manager = game_manager
 
         self.entity_configs = []
-        self.static_entities = []
-        self.dynamic_entities = []
+        self.entities = []
         self.load_entities()
         self.init_scene()
 
@@ -82,28 +81,24 @@ class Scene(QtWidgets.QWidget):
         return entity_types
 
     def init_scene(self):
-        self.static_entities = []
-        self.dynamic_entities = []
-        self.static_entities.append(Entity(self.entity_configs['ground'],self.fps))
+        self.entities = []
+        self.entities.append(Entity(self.entity_configs['ground'],self.fps))
     
     def spawn_entity(self,pose,velocity,entity_type=None):
         if not entity_type:
-            entity_config = self.entity_configs[self.entity_spawn_type]
+            entity_config = dict(self.entity_configs[self.entity_spawn_type])
         else:
-            entity_config = self.entity_configs[entity_type]
+            entity_config = dict(self.entity_configs[entity_type])
         
         if self.entity_spawn_physics == 'Static':
             spawn = Entity(entity_config,self.fps,pose=pose)
             spawn.config['static'] = 1
-            self.static_entities.append(spawn)
-            # self.static_entities[-1].config['static'] = 1
+            self.entities.append(spawn)
         elif self.entity_spawn_physics == 'Dynamic':
             spawn = DynamicEntity(entity_config,self.fps,self.cc_fun,pose=pose)
             spawn.config['static'] = 0
             spawn.physics.velocity = velocity
-            self.dynamic_entities.append(spawn)
-            # self.dynamic_entities[-1].physics.velocity = velocity
-            # self.dynamic_entities[-1].config['static'] = 0
+            self.entities.append(spawn)
 
     def point_is_collision(self,pose,entity):
         if entity.config['type']=='circle':
@@ -117,7 +112,7 @@ class Scene(QtWidgets.QWidget):
 
     def mouse_press(self,pose,id):
         if id == 1: # Left click
-            for entity in self.static_entities+self.dynamic_entities:
+            for entity in self.entities:
                 if self.point_is_collision(self.camera.transform(pose),entity):
                     self.logger.log(f'Selected entity: {entity}')
                     self.logger.log(f'Entity Config: {entity.config}')
@@ -128,15 +123,10 @@ class Scene(QtWidgets.QWidget):
             self.launch_origin = pose
             self.launch_point = pose
         elif id == 2: # Right click
-            for entity in self.dynamic_entities:
+            for entity in self.entities:
                 if self.point_is_collision(self.camera.transform(pose),entity):
                     self.logger.log(f'Removing entity: {entity}')
-                    self.dynamic_entities.remove(entity)
-                    return
-            for entity in self.static_entities:
-                if self.point_is_collision(self.camera.transform(pose),entity):
-                    self.logger.log(f'Removing entity: {entity}')
-                    self.static_entities.remove(entity)
+                    self.entities.remove(entity)
                     return
 
     def mouse_move(self,pose,id):
@@ -167,5 +157,6 @@ class Scene(QtWidgets.QWidget):
             self.launch_point = None
 
     def update(self,force,torque):
-        for entity in self.dynamic_entities:
-            entity.update_physics(self.static_entities+self.dynamic_entities,force,torque)
+        for entity in self.entities:
+            if type(entity)==DynamicEntity:
+                entity.update_physics(self.entities,force,torque)

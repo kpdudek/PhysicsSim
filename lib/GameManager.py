@@ -129,8 +129,7 @@ class GameManager(QLabel):
 
     def health_logger(self):
         self.logger.log(f'Average FPS: {self.average_fps}')
-        self.logger.log(f'Number of Static Entities: {len(self.scene.static_entities)}')
-        self.logger.log(f'Number of Dynamic Entities: {len(self.scene.dynamic_entities)}')
+        self.logger.log(f'Number of Entities: {len(self.scene.entities)}')
         self.logger.log(f'Keys pressed: {self.keys_pressed}')
         if self.debug_mode:
             self.logger.log('Debug Mode...')
@@ -158,7 +157,7 @@ class GameManager(QLabel):
             self.fail_count += 1
             if self.fail_count > self.fail_limit:
                 self.logger.log("Performance test finished!")
-                self.logger.log(f"Balls Spawned: {len(self.scene.static_entities+self.scene.dynamic_entities)}")
+                self.logger.log(f"Entities Spawned: {len(self.scene.entities)}")
                 self.scene.init_scene()
                 self.performance_test_timer.stop()
         else:
@@ -168,7 +167,6 @@ class GameManager(QLabel):
     def game_loop(self):
         tic = time.time()
         self.process_keys()
-        
         
         if not self.paused:
             self.scene.update(self.control_force*100.0,self.control_torque)
