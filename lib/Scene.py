@@ -93,12 +93,17 @@ class Scene(QtWidgets.QWidget):
             entity_config = self.entity_configs[entity_type]
         
         if self.entity_spawn_physics == 'Static':
-            self.static_entities.append(Entity(entity_config,self.fps,pose=pose))
-            self.static_entities[-1].config['static'] = 1
+            spawn = Entity(entity_config,self.fps,pose=pose)
+            spawn.config['static'] = 1
+            self.static_entities.append(spawn)
+            # self.static_entities[-1].config['static'] = 1
         elif self.entity_spawn_physics == 'Dynamic':
-            self.dynamic_entities.append(DynamicEntity(entity_config,self.fps,self.cc_fun,pose=pose))
-            self.dynamic_entities[-1].physics.velocity = velocity
-            self.dynamic_entities[-1].config['static'] = 0
+            spawn = DynamicEntity(entity_config,self.fps,self.cc_fun,pose=pose)
+            spawn.config['static'] = 0
+            spawn.physics.velocity = velocity
+            self.dynamic_entities.append(spawn)
+            # self.dynamic_entities[-1].physics.velocity = velocity
+            # self.dynamic_entities[-1].config['static'] = 0
 
     def point_is_collision(self,pose,entity):
         if entity.config['type']=='circle':
@@ -115,6 +120,7 @@ class Scene(QtWidgets.QWidget):
             for entity in self.static_entities+self.dynamic_entities:
                 if self.point_is_collision(self.camera.transform(pose),entity):
                     self.logger.log(f'Selected entity: {entity}')
+                    self.logger.log(f'Entity Config: {entity.config}')
                     self.item_selected = entity
                     self.prev_mouse_pose = pose
                     self.item_selected.physics_lock = True
@@ -139,7 +145,8 @@ class Scene(QtWidgets.QWidget):
             translate = curr_mouse_pose - self.prev_mouse_pose
             self.item_selected.translate(translate)
             self.prev_mouse_pose = curr_mouse_pose
-            if not self.item_selected.config['static']:
+            # if not self.item_selected.config['static']:
+            if type(self.item_selected)==DynamicEntity:
                 self.item_selected.physics.velocity = np.array(translate*150)
             return
         self.launch_point = pose
