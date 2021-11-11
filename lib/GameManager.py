@@ -143,12 +143,12 @@ class GameManager(QLabel):
     def run_performance_test(self):
         self.performance_test_timer = QtCore.QTimer()
         self.performance_test_timer.timeout.connect(self.performance_test_worker)
-        self.test_hz = 60
+        self.test_hz = 10
         self.fail_limit = self.test_hz * 3
         self.fail_count = 0
         self.pose = np.array([500.0,200.0])
-        self.velocity = np.array([0.0,-400.0])
-        self.theta = math.radians(5.0)
+        self.velocity = np.array([0.0,-800.0])
+        self.theta = math.radians(35.0)
         self.entity_type = 'ball'
         self.performance_test_timer.start(1000/self.test_hz)
 

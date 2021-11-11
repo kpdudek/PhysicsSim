@@ -45,6 +45,14 @@ class Physics2D(object):
                         elif abs(res+1.57) < tol:
                             reflect[0] = -1
                         return collision,reflect
+
+                elif body.config['type'] == 'circle':
+                    res = self.cc_fun.circle_circle(pose,self.config['radius'],body.pose,body.config['radius'])
+                    if res:
+                        collision = True
+                        reflect[1] = -1
+                        return collision,reflect
+            
         elif self.config['type'] == 'rect':
             for body in collision_bodies:
                 if body == self.parent:
