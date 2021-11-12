@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from PyQt5 import QtCore
-from lib.Entity import DynamicEntity
 
 from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
@@ -104,9 +103,9 @@ class Camera(object):
             self.paint_utils.set_color(self.painter,'green',True,width=3)
             self.painter.drawLine(pose[0],pose[1],pose[0]+y_axis[0],pose[1]+y_axis[1])
 
-        if type(entity)==DynamicEntity:
+        if not entity.config['static']:
             if self.display_tails and np.linalg.norm(entity.physics.velocity)>20.0:
-                self.paint_utils.set_color(self.painter,'orange',True)
+                self.paint_utils.set_color(self.painter,'orange',True,width=1)
                 r,c = entity.tail.shape
                 for idx in range(0,c-1):
                     p1 = self.transform(entity.tail[:,idx],parent_frame='scene',child_frame='camera')

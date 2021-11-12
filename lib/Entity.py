@@ -6,33 +6,23 @@ from lib.Logger import Logger
 import numpy as np
 
 class Entity(object):
-    def __init__(self,config,fps,pose=None):
+    def __init__(self,config,fps,cc_fun,pose=None):
+        super().__init__()
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.config = config
-        self.pose = np.array([self.config['pose'][0],self.config['pose'][1]])
-        if type(pose)==np.ndarray:
-            self.pose = pose
-        self.theta = 0.0
         self.fps = float(fps)
-        self.default_color = self.paint_utils.random_color()   
-    
-    def translate(self,vec):
-        self.pose = self.pose + vec
-    
-    def teleport(self,pose):
-        self.pose = pose
-
-class DynamicEntity(Entity):
-    def __init__(self,config,fps,cc_fun,pose=None):
-        super().__init__(config,fps)
+        self.default_color = self.paint_utils.random_color()
         self.physics = None
         self.physics_lock = False
         self.cc_fun = cc_fun
         if type(pose)==np.ndarray:
             self.pose = pose
-        
+        else:
+            self.pose = np.array([self.config['pose'][0],self.config['pose'][1]])
+        self.theta = 0.0
         self.mass = self.config['mass']
+        
         self.physics = Physics2D(self.config,self.mass,self.cc_fun,self)
         self.physics.pose = self.pose.copy()
 

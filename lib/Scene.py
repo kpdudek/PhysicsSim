@@ -2,7 +2,7 @@
 
 from PyQt5 import QtCore, QtWidgets
 from lib.Logger import Logger, FilePaths
-from lib.Entity import Entity, DynamicEntity
+from lib.Entity import Entity
 
 import os, json, ctypes
 import numpy as np
@@ -21,8 +21,6 @@ class Scene(QtWidgets.QWidget):
 
         self.entity_configs = []
         self.entities = []
-        self.load_entities()
-        self.init_scene()
 
         self.entity_spawn_physics = None
         self.entity_spawn_type = None
@@ -61,6 +59,8 @@ class Scene(QtWidgets.QWidget):
         res = self.cc_fun.get_library_version()
         self.logger.log(f"C collision checking library version: {res}")
 
+        self.load_entities()
+        self.init_scene()
         self.logger.log(f"Scene initialized...")
 
     def shutdown_event(self):
@@ -82,7 +82,7 @@ class Scene(QtWidgets.QWidget):
 
     def init_scene(self):
         self.entities = []
-        self.entities.append(Entity(self.entity_configs['ground'],self.fps))
+        self.entities.append(Entity(self.entity_configs['ground'],self.fps,self.cc_fun))
     
     def spawn_entity(self,pose,velocity,entity_type=None):
         if not entity_type:
@@ -91,11 +91,11 @@ class Scene(QtWidgets.QWidget):
             entity_config = dict(self.entity_configs[entity_type])
         
         if self.entity_spawn_physics == 'Static':
-            spawn = Entity(entity_config,self.fps,pose=pose)
+            spawn = Entity(entity_config,self.fps,self.cc_fun,pose=pose)
             spawn.config['static'] = 1
             self.entities.append(spawn)
         elif self.entity_spawn_physics == 'Dynamic':
-            spawn = DynamicEntity(entity_config,self.fps,self.cc_fun,pose=pose)
+            spawn = Entity(entity_config,self.fps,self.cc_fun,pose=pose)
             spawn.config['static'] = 0
             spawn.physics.velocity = velocity
             self.entities.append(spawn)
@@ -135,8 +135,7 @@ class Scene(QtWidgets.QWidget):
             translate = curr_mouse_pose - self.prev_mouse_pose
             self.item_selected.translate(translate)
             self.prev_mouse_pose = curr_mouse_pose
-            # if not self.item_selected.config['static']:
-            if type(self.item_selected)==DynamicEntity:
+            if not self.item_selected.config['static']:
                 self.item_selected.physics.velocity = np.array(translate*150)
             return
         self.launch_point = pose
@@ -158,5 +157,5 @@ class Scene(QtWidgets.QWidget):
 
     def update(self,force,torque):
         for entity in self.entities:
-            if type(entity)==DynamicEntity:
+            if not entity.config['static']:
                 entity.update_physics(self.entities,force,torque)
