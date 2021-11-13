@@ -76,7 +76,7 @@ class Camera(object):
             Draws both static and dynamic entities from the scene.
             Drawn in camera frame, so no transform is needed.
         '''
-        pose = self.transform(entity.pose,parent_frame='scene',child_frame='camera')
+        pose = self.transform(entity.physics.pose,parent_frame='scene',child_frame='camera')
 
         if entity.config['type'] == 'circle':
             self.paint_utils.set_color(self.painter,entity.default_color,entity.config['fill'])

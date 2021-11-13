@@ -102,10 +102,10 @@ class Scene(QtWidgets.QWidget):
 
     def point_is_collision(self,pose,entity):
         if entity.config['type']=='circle':
-            if self.cc_fun.point_circle(pose,entity.pose,entity.config['radius']):
+            if self.cc_fun.point_circle(pose,entity.physics.pose,entity.config['radius']):
                 return True
         elif entity.config['type']=='rect':
-            if self.cc_fun.point_rect(pose,entity.pose,entity.config['width'],entity.config['height']):
+            if self.cc_fun.point_rect(pose,entity.physics.pose,entity.config['width'],entity.config['height']):
                 return True
         else:
             return False

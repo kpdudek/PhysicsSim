@@ -12,7 +12,6 @@ class Physics2D(object):
         self.file_paths = FilePaths()
         self.parent = parent
 
-        self.pose = np.array([20.0,20.0])
         self.velocity = np.array([0.0,0.0])
         self.max_velocity = 2000.0
         self.theta = 0.0
@@ -33,7 +32,7 @@ class Physics2D(object):
                 if body == self.parent:
                     pass
                 elif body.config['type'] == 'rect':
-                    res = self.cc_fun.circle_rect(pose,self.config['radius'],body.pose,body.config['width'],body.config['height'])
+                    res = self.cc_fun.circle_rect(pose,self.config['radius'],body.physics.pose,body.config['width'],body.config['height'])
                     if res != -999.0:
                         collision = True
                         if abs(res-1.57) < tol:
@@ -47,7 +46,7 @@ class Physics2D(object):
                         return collision,reflect
 
                 elif body.config['type'] == 'circle':
-                    res = self.cc_fun.circle_circle(pose,self.config['radius'],body.pose,body.config['radius'])
+                    res = self.cc_fun.circle_circle(pose,self.config['radius'],body.physics.pose,body.config['radius'])
                     if res:
                         collision = True
                         reflect[1] = -1
@@ -58,13 +57,13 @@ class Physics2D(object):
                 if body == self.parent:
                     pass
                 elif body.config['type'] == 'rect':
-                    res = self.cc_fun.rect_rect(pose,self.config['width'],self.config['height'],body.pose,body.config['width'],body.config['height'])
+                    res = self.cc_fun.rect_rect(pose,self.config['width'],self.config['height'],body.physics.pose,body.config['width'],body.config['height'])
                     if res != -999.0:
                         collision = True
                         reflect[0] = -1
                         return collision,reflect
                 elif body.config['type'] == 'circle':
-                    res = self.cc_fun.circle_rect(body.pose,body.config['radius'],self.pose,self.config['width'],self.config['height'])
+                    res = self.cc_fun.circle_rect(body.physics.pose,body.config['radius'],self.pose,self.config['width'],self.config['height'])
                     if res != -999.0:
                         collision = True
                         reflect[0] = -1

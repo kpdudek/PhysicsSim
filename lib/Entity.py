@@ -13,43 +13,42 @@ class Entity(object):
         self.config = config
         self.fps = float(fps)
         self.default_color = self.paint_utils.random_color()
-        self.physics = None
         self.physics_lock = False
         self.cc_fun = cc_fun
-        if type(pose)==np.ndarray:
-            self.pose = pose
-        else:
-            self.pose = np.array([self.config['pose'][0],self.config['pose'][1]])
-        self.theta = 0.0
+
         self.mass = self.config['mass']
-        
         self.physics = Physics2D(self.config,self.mass,self.cc_fun,self)
-        self.physics.pose = self.pose.copy()
+        if type(pose)==np.ndarray:
+            self.physics.pose = pose
+        else:
+            self.physics.pose = np.array([self.config['pose'][0],self.config['pose'][1]])
+        self.theta = 0.0
 
         self.tail_step = 0
         self.tail_step_max = 2
         self.tail = np.ones((2,10))
-        self.tail[0,:] = self.tail[0,:]*self.pose[0]
-        self.tail[1,:] = self.tail[1,:]*self.pose[1]
+        self.tail[0,:] = self.tail[0,:]*self.physics.pose[0]
+        self.tail[1,:] = self.tail[1,:]*self.physics.pose[1]
 
     def translate(self,vec):
-        self.pose = self.pose + vec
         self.physics.pose = self.physics.pose + vec
     
     def teleport(self,pose):
-        self.pose = pose
         self.physics.pose = pose
 
     def update_physics(self,collision_bodies,forces,torques):
         if self.physics and not self.physics_lock:
             t = 1.0/self.fps
-            pose,theta = self.physics.accelerate(self.physics.gravity_force,torques,t,collision_bodies)
-            self.pose = pose
+            resultant_force = self.physics.gravity_force
+            for force in forces:
+                resultant_force += force
+            pose,theta = self.physics.accelerate(resultant_force,torques,t,collision_bodies)
+            self.physics.pose = pose
             self.theta = theta
         
         if self.tail_step == self.tail_step_max:
             self.tail = self.tail[:,1:]
-            append = self.pose.copy()
+            append = self.physics.pose.copy()
             self.tail = np.hstack((self.tail,append.reshape(2,1)))
             self.tail_step = 0
         else:
