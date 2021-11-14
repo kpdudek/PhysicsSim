@@ -14,10 +14,12 @@ def main():
     logger = Logger()
     file_paths = FilePaths()
     
+    # Initialize Collision Checking Library
     cc_fun = ctypes.CDLL(f'{os.path.dirname(path)}/{file_paths.cc_lib_path}')
     res = cc_fun.get_library_version()
     logger.log(f"C collision checking library version: {res}")
 
+    # Min Dist Point to Line test
     cc_fun.min_dist_point_to_line_test.argtypes = [ctypes.c_double]*6
     cc_fun.min_dist_point_to_line_test.restype = ctypes.c_double
     dist = cc_fun.min_dist_point_to_line_test(3.0,8.0,0.0,0.0,10.0,0.0)
@@ -61,6 +63,20 @@ def main():
     toc = time.time()
     logger.log(f'Rect Rect collision check result: {res}')
     logger.log('Rect Rect collision check took: %f seconds'%(toc-tic))
+
+    # Circle Poly collision check
+    cc_fun.circle_poly.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_int]
+    cc_fun.circle_poly.restype = ctypes.c_double
+    pose = np.array([0.0,0.0])
+    radius = 5.0
+    poly = np.array([[0,3,3,0],[0,0,3,3]],dtype=np.double)
+    poly = poly + 1.0
+    r,c = poly.shape
+    tic = time.time()
+    res = cc_fun.circle_poly(pose,radius,poly,c)
+    toc = time.time()
+    logger.log(f'Circle Poly collision check result: {res}')
+    logger.log('Circle Poly collision check took: %f seconds'%(toc-tic))
 
     # Plotting
     plt.gca().set_aspect('equal')

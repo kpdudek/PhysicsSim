@@ -18,3 +18,7 @@ struct Point return_struct(void){
 int mult(int a, int b){
     return a*b;
 }
+
+void array_test(double np_array [], int cols){
+    printf("Vertex 1: [%f,%f]",np_array[0],np_array[cols]);
+}

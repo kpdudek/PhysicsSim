@@ -68,7 +68,10 @@ class Scene(QtWidgets.QWidget):
 
     def load_entities(self):
         self.entity_configs = {}
-        entities = os.listdir(self.file_paths.entity_path)
+        entities = []
+        for file_name in os.listdir(self.file_paths.entity_path):
+            if '.json' in file_name:
+                entities.append(file_name)
         self.logger.log(f'Entities found: {entities}')
         for idx,entity in enumerate(entities):
             fp = open(f'{self.file_paths.entity_path}{entity}','r')

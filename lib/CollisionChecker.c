@@ -203,8 +203,31 @@ double circle_rect(double pose_1 [2], double radius_1, double pose_2 [2], double
     return result;
 }
 
-int circle_mesh(double pose_1 [2], double radius_1, double x_vals [], double y_vals []){
-    int result = 0;
+double circle_poly(double pose [2], double radius, double poly [], int cols){
+    double result = -999.0;
+    struct Point p; p.x = pose[0]; p.y = pose[1];
+    struct Point c1;
+    struct Point c2;
+
+    for(int i=0; i<cols; i++){
+        if(i==cols-1){
+            c1.x = poly[i]; c1.y = poly[i+cols];
+            c2.x = poly[0]; c2.y = poly[cols];
+        }
+        else{
+            c1.x = poly[i]; c1.y = poly[i+cols];
+            c2.x = poly[i+1]; c2.y = poly[i+1+cols];
+        }
+        printf("Point: [%f,%f]\n",p.x,p.y);
+        printf("Edge: [%f,%f] [%f,%f]\n",c1.x,c1.y,c2.x,c2.y);
+        if(min_dist_point_to_line(p,c1,c2) <= radius){
+            struct Point V0;
+            V0.x = c1.x+50.0;
+            V0.y = c1.y;
+            return result = edge_angle(c1,V0,c2);
+        }
+    }
+
     return result;
 }
 
