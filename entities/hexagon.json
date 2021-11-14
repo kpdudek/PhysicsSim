@@ -1,0 +1,12 @@
+{
+    "name":"hexagon",
+    "type":"poly",
+    "static":1,
+    "color":"brown",
+    "fill":1,
+
+    "pose":[0.0,0.0],
+    "vertices":null,
+    "num_vertices":null,
+    "mass":100.0
+}

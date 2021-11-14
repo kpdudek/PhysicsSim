@@ -92,6 +92,15 @@ class Camera(object):
             if self.game_manager.debug_mode:
                 self.paint_utils.set_color(self.painter,'black',0)            
                 self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
+        elif entity.config['type'] == 'poly':
+            self.paint_utils.set_color(self.painter,'black',1,width=3)
+            self.painter.drawPoint(pose[0],pose[1])
+            verts = entity.config['vertices'].copy()
+            r,c = verts.shape
+            verts[0,:] = verts[0,:]+pose[0]
+            verts[1,:] = verts[1,:]+pose[1]
+            for i in range(c):
+                self.painter.drawPoint(verts[0,i],verts[1,i])
 
         if self.game_manager.debug_mode:
             unit_vec = np.array([[15.0,0.0],[0.0,15.0]])

@@ -51,6 +51,16 @@ class Physics2D(object):
                         collision = True
                         reflect[1] = -1
                         return collision,reflect
+                
+                elif body.config['type'] == 'poly':
+                    vertices = body.config['vertices'].copy()
+                    vertices[0,:] += body.physics.pose[0]
+                    vertices[1,:] += body.physics.pose[1]
+                    res = self.cc_fun.circle_poly(pose,self.config['radius'],vertices,body.config['num_vertices'])
+                    if res!=-999.0:
+                        collision = True
+                        reflect[1] = -1
+                        return collision,reflect
             
         elif self.config['type'] == 'rect':
             for body in collision_bodies:
@@ -60,13 +70,13 @@ class Physics2D(object):
                     res = self.cc_fun.rect_rect(pose,self.config['width'],self.config['height'],body.physics.pose,body.config['width'],body.config['height'])
                     if res != -999.0:
                         collision = True
-                        reflect[0] = -1
+                        reflect[1] = -1
                         return collision,reflect
                 elif body.config['type'] == 'circle':
                     res = self.cc_fun.circle_rect(body.physics.pose,body.config['radius'],self.pose,self.config['width'],self.config['height'])
                     if res != -999.0:
                         collision = True
-                        reflect[0] = -1
+                        reflect[1] = -1
                         return collision,reflect
         return collision,reflect
 

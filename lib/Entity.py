@@ -4,6 +4,7 @@ from lib.Physics2D import Physics2D
 from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
 import numpy as np
+import math
 
 class Entity(object):
     def __init__(self,config,fps,cc_fun,pose=None):
@@ -29,6 +30,22 @@ class Entity(object):
         self.tail = np.ones((2,10))
         self.tail[0,:] = self.tail[0,:]*self.physics.pose[0]
         self.tail[1,:] = self.tail[1,:]*self.physics.pose[1]
+
+        if self.config['type'] == 'poly':
+            self.compute_vertices()
+
+    def compute_vertices(self):
+        circ_points = 5
+        circle = np.zeros((2,circ_points))
+        theta = 0.0
+        delta_theta = math.radians(360.0/float(circ_points))
+        for i in range(circ_points):
+            circle[0,i] = math.cos(theta)*40
+            circle[1,i] = math.sin(theta)*40
+            theta += delta_theta
+        # circle = np.hstack((circle,circle[:,0].reshape(2,1)))
+        self.config['vertices'] = circle
+        self.config['num_vertices'] = circ_points
 
     def translate(self,vec):
         self.physics.pose = self.physics.pose + vec

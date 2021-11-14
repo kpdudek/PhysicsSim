@@ -218,8 +218,6 @@ double circle_poly(double pose [2], double radius, double poly [], int cols){
             c1.x = poly[i]; c1.y = poly[i+cols];
             c2.x = poly[i+1]; c2.y = poly[i+1+cols];
         }
-        printf("Point: [%f,%f]\n",p.x,p.y);
-        printf("Edge: [%f,%f] [%f,%f]\n",c1.x,c1.y,c2.x,c2.y);
         if(min_dist_point_to_line(p,c1,c2) <= radius){
             struct Point V0;
             V0.x = c1.x+50.0;
@@ -262,35 +260,16 @@ double rect_rect(double pose_1 [2], double w1, double h1, double pose_2 [2], dou
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Tests
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-int circle_circle_test(void){
-    double pose_1 [2] = {1,1};
-    double pose_2 [2] = {5,1};
-    double radius_1 = 1.5;
-    double radius_2 = 1.5;
-    int res = circle_circle(pose_1,radius_1,pose_2,radius_2);
-    return res;
-}
-
-int circle_rect_test(void){
-    int res = 0;
-    return res;
-}
-
-int circle_mesh_test(void){
-    int res = 0;
-    return res;
-}
-
-double min_dist_point_to_line_test(double px, double py, double c1x, double c1y, double c2x, double c2y){
+double min_dist_point_to_line_test(double point [2], double v1 [2], double v2 [2]){
     struct Point p;
-    p.x = px;
-    p.y = py;
+    p.x = point[0];
+    p.y = point[1];
     struct Point c1;
-    c1.x = c1x;
-    c1.y = c1y;
+    c1.x = v1[0];
+    c1.y = v1[1];
     struct Point c2;
-    c2.x = c2x;
-    c2.y = c2y;
+    c2.x = v2[0];
+    c2.y = v2[1];
 
     double dist = min_dist_point_to_line(p,c1,c2);
     return dist;

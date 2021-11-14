@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os,sys, time, ctypes
+import os,sys, time, ctypes, math
 import numpy as np
 from matplotlib import pyplot as plt
 from numpy.ctypeslib import ndpointer
@@ -20,9 +20,12 @@ def main():
     logger.log(f"C collision checking library version: {res}")
 
     # Min Dist Point to Line test
-    cc_fun.min_dist_point_to_line_test.argtypes = [ctypes.c_double]*6
+    cc_fun.min_dist_point_to_line_test.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ndpointer(ctypes.c_double, flags="C_CONTIGUOUS")]
     cc_fun.min_dist_point_to_line_test.restype = ctypes.c_double
-    dist = cc_fun.min_dist_point_to_line_test(3.0,8.0,0.0,0.0,10.0,0.0)
+    p = np.array([3.0,5.0])
+    v1 = np.array([0.0,0.0])
+    v2 = np.array([10.0,10.0])
+    dist = cc_fun.min_dist_point_to_line_test(p,v1,v2)
     logger.log(f'Min Dist Result: {dist}')
 
     # Circle Circle collision check
@@ -67,20 +70,32 @@ def main():
     # Circle Poly collision check
     cc_fun.circle_poly.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_int]
     cc_fun.circle_poly.restype = ctypes.c_double
-    pose = np.array([0.0,0.0])
-    radius = 5.0
+    pose = np.array([0.0,1.5])
+    radius = 2.0
     poly = np.array([[0,3,3,0],[0,0,3,3]],dtype=np.double)
-    poly = poly + 1.0
     r,c = poly.shape
     tic = time.time()
     res = cc_fun.circle_poly(pose,radius,poly,c)
-    toc = time.time()
     logger.log(f'Circle Poly collision check result: {res}')
     logger.log('Circle Poly collision check took: %f seconds'%(toc-tic))
 
+    circ_points = 20
+    circle = np.zeros((2,circ_points))
+    theta = 0.0
+    delta_theta = math.radians(360.0/float(circ_points))
+    for i in range(20):
+        circle[0,i] = math.cos(theta)+pose[0]
+        circle[1,i] = math.sin(theta)+pose[1]
+        theta += delta_theta
+    circle = np.hstack((circle,circle[:,0].reshape(2,1)))
+    plt.plot([0,1],[0,0],'r')
+    plt.plot([0,0],[0,1],'g')
+    plt.plot(circle[0,:],circle[1,:],'b')
+    plt.plot(np.hstack((poly[0,:],poly[0,0])),np.hstack((poly[1,:],poly[1,0])),'k')
+    
     # Plotting
     plt.gca().set_aspect('equal')
-    # plt.show()
+    plt.show()
 
 if __name__ == '__main__':
     main()

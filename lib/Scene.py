@@ -55,6 +55,9 @@ class Scene(QtWidgets.QWidget):
         # Point Circle collision check
         self.cc_fun.point_circle.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double]
         self.cc_fun.point_circle.restype = ctypes.c_double
+        # Circle Poly collision check
+        self.cc_fun.circle_poly.argtypes = [ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_double,ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"),ctypes.c_int]
+        self.cc_fun.circle_poly.restype = ctypes.c_double
 
         res = self.cc_fun.get_library_version()
         self.logger.log(f"C collision checking library version: {res}")
