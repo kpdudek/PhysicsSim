@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from PyQt5 import QtCore
+from PyQt5.QtGui import QPolygonF
+from PyQt5.QtCore import QPointF
 
 from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
@@ -92,15 +94,19 @@ class Camera(object):
             if self.game_manager.debug_mode:
                 self.paint_utils.set_color(self.painter,'black',0)            
                 self.painter.drawRect(pose[0],pose[1],entity.config['width'],entity.config['height'])
+        
         elif entity.config['type'] == 'poly':
-            self.paint_utils.set_color(self.painter,'black',1,width=3)
-            self.painter.drawPoint(pose[0],pose[1])
+            self.paint_utils.set_color(self.painter,entity.config['color'],1)
             verts = entity.config['vertices'].copy()
             r,c = verts.shape
-            verts[0,:] = verts[0,:]+pose[0]
-            verts[1,:] = verts[1,:]+pose[1]
+            points = []
             for i in range(c):
-                self.painter.drawPoint(verts[0,i],verts[1,i])
+                points.append(QPointF(float(verts[0,i]+pose[0]),float(verts[1,i]+pose[1])))
+            poly = QPolygonF(points)
+            self.painter.drawPolygon(poly)
+            if self.game_manager.debug_mode:
+                self.paint_utils.set_color(self.painter,'black',0)            
+                self.painter.drawPolygon(poly)
 
         if self.game_manager.debug_mode:
             unit_vec = np.array([[15.0,0.0],[0.0,15.0]])

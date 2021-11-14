@@ -4,6 +4,7 @@ from lib.Logger import Logger, FilePaths
 import lib.Geometry as geom
 import numpy as np
 from math import pi
+import math
 
 class Physics2D(object):
     def __init__(self,config,mass,cc_fun,parent):
@@ -60,6 +61,7 @@ class Physics2D(object):
                     if res!=-999.0:
                         collision = True
                         reflect[1] = -1
+                        print(math.degrees(res))
                         return collision,reflect
             
         elif self.config['type'] == 'rect':

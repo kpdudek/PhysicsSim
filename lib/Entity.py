@@ -36,14 +36,14 @@ class Entity(object):
 
     def compute_vertices(self):
         circ_points = 5
+        radius = 100.0
         circle = np.zeros((2,circ_points))
         theta = 0.0
         delta_theta = math.radians(360.0/float(circ_points))
         for i in range(circ_points):
-            circle[0,i] = math.cos(theta)*40
-            circle[1,i] = math.sin(theta)*40
+            circle[0,i] = math.cos(theta)*radius
+            circle[1,i] = math.sin(theta)*radius
             theta += delta_theta
-        # circle = np.hstack((circle,circle[:,0].reshape(2,1)))
         self.config['vertices'] = circle
         self.config['num_vertices'] = circ_points
 
@@ -63,10 +63,11 @@ class Entity(object):
             self.physics.pose = pose
             self.theta = theta
         
-        if self.tail_step == self.tail_step_max:
-            self.tail = self.tail[:,1:]
-            append = self.physics.pose.copy()
-            self.tail = np.hstack((self.tail,append.reshape(2,1)))
-            self.tail_step = 0
-        else:
-            self.tail_step += 1
+        if not self.config['static']:
+            if self.tail_step == self.tail_step_max:
+                self.tail = self.tail[:,1:]
+                append = self.physics.pose.copy()
+                self.tail = np.hstack((self.tail,append.reshape(2,1)))
+                self.tail_step = 0
+            else:
+                self.tail_step += 1
