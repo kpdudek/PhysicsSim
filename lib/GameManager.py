@@ -15,7 +15,7 @@ import lib.Geometry as geom
 import numpy as np
 import time, math
 
-class GameManager(QLabel):
+class GameManager():
     shutdown_signal = QtCore.pyqtSignal()
     resize_signal = QtCore.pyqtSignal(int,int)
 

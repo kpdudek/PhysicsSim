@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QGraphicsScene
 from lib.Logger import Logger, FilePaths
 from lib.Entity import Entity
 
@@ -9,7 +10,7 @@ import numpy as np
 import lib.Geometry as geom
 from numpy.ctypeslib import ndpointer
 
-class Scene(QtWidgets.QWidget):
+class Scene(QGraphicsScene):
     shutdown_signal = QtCore.pyqtSignal()
 
     def __init__(self,fps,game_manager):

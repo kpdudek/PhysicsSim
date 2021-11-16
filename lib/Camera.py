@@ -3,6 +3,7 @@
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPolygonF
 from PyQt5.QtCore import QPointF
+from PyQt5.QtWidgets import QGraphicsView
 
 from lib.PaintUtils import PaintUtils
 from lib.Logger import Logger
@@ -10,7 +11,7 @@ import lib.Geometry as geom
 import lib.Errors as errors
 import numpy as np
 
-class Camera(object):
+class Camera(QGraphicsView):
     def __init__(self,frame_size,painter,scene,game_manager):
         self.logger = Logger()
         self.paint_utils = PaintUtils()
