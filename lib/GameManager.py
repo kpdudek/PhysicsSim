@@ -147,6 +147,8 @@ class GameManager():
         self.average_physics_fps = (self.physics_fps + self.prev_physics_fps) / 2.0
         self.average_painting_fps = (self.painting_fps + self.prev_painting_fps) / 2.0
         self.prev_fps = self.max_fps
+        self.prev_painting_fps = self.painting_fps
+        self.prev_physics_fps = self.physics_fps
         if self.max_fps < self.fps:
             self.logger.log(f'FPS has dropped below the set value!',color='r')
 
