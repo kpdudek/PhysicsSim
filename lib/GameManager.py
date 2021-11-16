@@ -30,8 +30,14 @@ class GameManager(QLabel):
         self.debug_mode = False
         self.fps = 60.0
         self.max_fps = 0.0
+        self.physics_fps= 0.0
+        self.painting_fps = 0.0
         self.prev_fps = 0.0
+        self.prev_physics_fps = 0.0
+        self.prev_painting_fps = 0.0
         self.average_fps = 0.0
+        self.average_physics_fps = 0.0
+        self.average_painting_fps = 0.0
 
         self.resize_flag = False
         self.resize_size = []
@@ -129,6 +135,8 @@ class GameManager(QLabel):
 
     def health_logger(self):
         self.logger.log(f'Average FPS: {self.average_fps}')
+        self.logger.log(f'Average Physics FPS: {self.average_physics_fps}')
+        self.logger.log(f'Average Painting FPS: {self.average_painting_fps}')
         self.logger.log(f'Number of Entities: {len(self.scene.entities)}')
         self.logger.log(f'Keys pressed: {self.keys_pressed}')
         if self.debug_mode:
@@ -136,6 +144,8 @@ class GameManager(QLabel):
     
     def average_fps_calculator(self):
         self.average_fps = (self.max_fps + self.prev_fps) / 2.0
+        self.average_physics_fps = (self.physics_fps + self.prev_physics_fps) / 2.0
+        self.average_painting_fps = (self.painting_fps + self.prev_painting_fps) / 2.0
         self.prev_fps = self.max_fps
         if self.max_fps < self.fps:
             self.logger.log(f'FPS has dropped below the set value!',color='r')
@@ -171,12 +181,15 @@ class GameManager(QLabel):
         if not self.paused:
             self.scene.update(self.control_force*100.0,self.control_torque)
         
+        physics_tic = time.time()
         self.camera.clear_display(self.average_fps)
         self.camera.update()
         self.camera.paint_launch_controls()
         self.repaint()
         toc = time.time()
         try:
+            self.physics_fps= 1.0/(physics_tic-tic)
+            self.painting_fps = 1.0/(toc-physics_tic)
             self.max_fps = 1.0/(toc-tic)
         except:
             pass
