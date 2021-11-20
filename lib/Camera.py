@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from PyQt5.QtCore import Qt
+
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPolygonF
 from PyQt5.QtCore import QPointF
@@ -21,6 +23,8 @@ class Camera(QGraphicsView):
         self.zoom_level = 1.0
         self.game_manager = game_manager
 
+        self.keys_pressed = []
+
         self.frames = {
             'camera':np.array([0.0,0.0]),
             'scene':np.array([0.0,0.0])
@@ -28,6 +32,30 @@ class Camera(QGraphicsView):
 
         self.display_fps_overlay = True
         self.display_tails = False
+
+    def keyPressEvent(self, event):                
+        if event.key() == Qt.Key_Escape:
+            self.shutdown()
+        else:
+            if event.key() not in self.keys_pressed:
+                self.keys_pressed.append(event.key())
+
+    def keyReleaseEvent(self, event):
+        if not event.isAutoRepeat() and event.key() in self.keys_pressed:
+            self.keys_pressed.remove(event.key())
+    
+    def mousePressEvent(self, e):
+        self.logger.log(f'Mouse press [{e.button()}] at: ({e.x()},{e.y()})',color='g')
+        point = np.array([e.x(),e.y()])
+        self.scene.mouse_press(point,e.button())
+    
+    def mouseMoveEvent(self, e):
+        point = np.array([e.x(),e.y()])
+        self.scene.mouse_move(point,e.button())
+
+    def mouseReleaseEvent(self,e):
+        point = np.array([e.x(),e.y()])
+        self.scene.mouse_release(point,e.button())
 
     def reset(self):
         self.teleport(np.zeros((2)))

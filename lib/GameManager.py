@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-from PyQt5 import QtCore
-from PyQt5 import QtGui
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLabel
 
 from lib.Logger import Logger, FilePaths
 from lib.PaintUtils import PaintUtils
@@ -16,16 +14,11 @@ import numpy as np
 import time, math
 
 class GameManager():
-    shutdown_signal = QtCore.pyqtSignal()
-    resize_signal = QtCore.pyqtSignal(int,int)
-
-    def __init__(self,keys_pressed):
+    def __init__(self,screen_resolution):
         super().__init__()
-        self.keys_pressed = keys_pressed
         self.logger = Logger()
         self.paint_utils = PaintUtils()
         self.file_paths = FilePaths()
-        self.settings = None
 
         self.debug_mode = False
         self.fps = 60.0
@@ -64,30 +57,7 @@ class GameManager():
         self.start_simulation()
 
     def shutdown_event(self):
-        self.shutdown_signal.emit()
-        QApplication.processEvents()
-
-    def resize_canvas(self,width,height):
-        try:
-            self.painter.end()
-        except:
-            pass
-        self.frame_size = np.array([width,height])
-        self.canvas_pixmap = QtGui.QPixmap(self.frame_size[0],self.frame_size[1])
-        self.setPixmap(self.canvas_pixmap)
-        self.painter = QtGui.QPainter(self.pixmap())
-        try:
-            self.camera.painter = self.painter
-            self.camera.frame_size = self.frame_size
-        except:
-            pass
-        self.resize_flag = False
-        self.resize_signal.emit(width,height)
-
-    def resizeEvent(self, e):
-        self.logger.log(f"Window resized to: [{e.size().width()},{e.size().height()}]")
-        self.resize_flag = True
-        self.resize_size = [e.size().width(),e.size().height()]
+        self.camera.close()
 
     def start_simulation(self):
         self.logger.insert_blank_lines(2)
@@ -95,19 +65,6 @@ class GameManager():
         self.game_timer.start(1000/self.fps)
         self.average_fps_timer.start(1000)
 
-    def mousePressEvent(self, e):
-        self.logger.log(f'Mouse press [{e.button()}] at: ({e.x()},{e.y()})',color='g')
-        point = np.array([e.x(),e.y()])
-        self.scene.mouse_press(point,e.button())
-    
-    def mouseMoveEvent(self, e):
-        point = np.array([e.x(),e.y()])
-        self.scene.mouse_move(point,e.button())
-
-    def mouseReleaseEvent(self,e):
-        point = np.array([e.x(),e.y()])
-        self.scene.mouse_release(point,e.button())
-        
     def process_keys(self):
         self.control_force = np.array([0,0])
         self.control_torque = 0.0
